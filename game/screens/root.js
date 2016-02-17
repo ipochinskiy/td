@@ -6,7 +6,7 @@ var RootScreen = function() {
 	var behaviorSystem = BehaviorSystem();
 
 	var Enemy = initEnemy(behaviorSystem);
-	var Tower = initTowers(behaviorSystem, Enemy);
+	var Tower = initTowers(behaviorSystem);
 	var Wave = initWaves(Enemy.spawnEnemy);
 
 	return Behavior.first(
@@ -35,6 +35,8 @@ var RootScreen = function() {
 			return { done: false };
 		},
 		Behavior.run(function*() {
+			behaviorSystem.add(Wave.spawnWave());
+
 			while(true) {
 				var event = yield Behavior.first(
 					Behavior.run(function*() {
@@ -54,9 +56,6 @@ var RootScreen = function() {
 					behaviorSystem.add(Tower.buildTower(cellUnderMouse));
 				}
 			}
-		}),
-		Behavior.run(function*() {
-			behaviorSystem.add(Wave.spawnWave());
 		})
 	);
 }
