@@ -26,6 +26,11 @@ function getCellSize(size) {
 	);
 }
 
+function isCellOccupiable(cell) {
+	var content = getCellContent(cell);
+	return content === MAP_SYMBOL_PATH || content === MAP_SYMBOL_START;
+}
+
 function setCellContent(cell, content) {
 	map[cell.y] = map[cell.y].substr(0, cell.x) + content + map[cell.y].substr(cell.x + 1);
 }

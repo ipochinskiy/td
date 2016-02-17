@@ -5,6 +5,10 @@ var RootScreen = function() {
 
 	var behaviorSystem = BehaviorSystem();
 
+	var Enemy = initEnemy(behaviorSystem);
+	var Tower = initTowers(behaviorSystem, Enemy);
+	var Wave = initWaves(Enemy.spawnEnemy);
+
 	return Behavior.first(
 		Behavior.run(function*() {
 			while (true) {
@@ -47,12 +51,12 @@ var RootScreen = function() {
 				var cellContent = getCellContent(cellUnderMouse);
 
 				if (cellContent === ' ') {
-					behaviorSystem.add(buildTower(cellUnderMouse));
+					behaviorSystem.add(Tower.buildTower(cellUnderMouse));
 				}
 			}
 		}),
 		Behavior.run(function*() {
-			behaviorSystem.add(spawnWave());
+			behaviorSystem.add(Wave.spawnWave());
 		})
 	);
 }
