@@ -20,15 +20,17 @@ function getCellCenterCoords(context, cellX, cellY) {
 }
 
 function getCellSize(size) {
-	return vec(
-		size.x / map[0].length,
-		size.y / map.length
-	);
+	return vdiv(size, vec(map[0].length, map.length));
 }
 
-function isCellOccupiable(cell) {
+function isCellPath(cell) {
 	var content = getCellContent(cell);
 	return content === MAP_SYMBOL_PATH || content === MAP_SYMBOL_START;
+}
+
+function isCellCastle(cell) {
+	var content = getCellContent(cell);
+	return content === MAP_SYMBOL_END;
 }
 
 function setCellContent(cell, content) {
@@ -37,6 +39,10 @@ function setCellContent(cell, content) {
 
 function getCellContent(cell) {
 	return (map[cell.y] || [])[cell.x];
+}
+
+function isCellFree(cell) {
+	return getCellContent(cell) === ' ';
 }
 
 function getStartCellCoords() {

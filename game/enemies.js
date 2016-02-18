@@ -16,7 +16,7 @@ function isStepBack(enemy, step) {
 
 function getNextStep(enemy) {
 	return getNearbyCells(enemy.currentPosition).filter(function(cell) {
-		return isCellOccupiable(cell) && !isStepBack(enemy, cell);
+		return isCellPath(cell) && !isStepBack(enemy, cell);
 	})[0];
 }
 

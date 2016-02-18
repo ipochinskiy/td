@@ -9,25 +9,25 @@ var RootScreen = function() {
 	var Tower = initTowers(behaviorSystem);
 	var Wave = initWaves(Enemy.spawnEnemy);
 
+	var Drawer = initDrawer();
+
 	return Behavior.first(
 		Behavior.run(function*() {
 			while (true) {
 				var event = yield Behavior.type('show');
-
-				var enemiesAlive = enemies.filter(isEnemyAlive);
-
 				var context = event.context;
 				canvasSize = vec(context.canvas.width, context.canvas.height);
 
 				var cellSize = getCellSize(canvasSize);
 
-				drawMap(context, cellSize.x, cellSize.y);
+				Drawer.drawMap(context, cellSize);
 
-				towers.forEach(drawTower.bind(null, context, cellSize.x, cellSize.y));
-				enemiesAlive.forEach(drawEnemy.bind(null, context, cellSize.x, cellSize.y));
+				towers.forEach(Drawer.drawTower.bind(null, context, cellSize));
+				enemies.filter(isEnemyAlive)
+					.forEach(Drawer.drawEnemy.bind(null, context, cellSize));
 
 				var color = blueprint.valid ? 'green' : 'red';
-				drawHighlightedCell(context, cellSize, blueprint.cell, color);
+				Drawer.drawHighlightedCell(context, cellSize, blueprint.cell, color);
 			}
 		}),
 		function (event) {
@@ -43,16 +43,14 @@ var RootScreen = function() {
 						while (true) {
 							var event = yield Behavior.type('mousemove');
 							blueprint.cell = getCellByCoords(canvasSize, event.pos);
-							blueprint.valid = getCellContent(blueprint.cell) === ' ';
+							blueprint.valid = isCellFree(blueprint.cell);
 						}
 					}),
 					Behavior.type('mousedown')
 				);
 
 				var cellUnderMouse = getCellByCoords(canvasSize, event.pos);
-				var cellContent = getCellContent(cellUnderMouse);
-
-				if (cellContent === ' ') {
+				if (isCellFree(cellUnderMouse)) {
 					behaviorSystem.add(Tower.buildTower(cellUnderMouse));
 				}
 			}
