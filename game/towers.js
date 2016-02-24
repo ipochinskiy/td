@@ -1,11 +1,11 @@
 var towers = [];
 
 var initTowers = function(behaviorSystem) {
-	function getDefaultTower(x, y) {
+	function getDefaultTower(cell) {
 		return {
-			x: x,
-			y: y,
-			range: 2,
+			position: vclone(cell),
+			power: 1.5,
+			range: 1.5,
 			cooldown: 0.8,
 			currentTimeout: 0
 		};
@@ -13,7 +13,7 @@ var initTowers = function(behaviorSystem) {
 
 	function waitForTarget(tower) {
 		return Behavior.update(function() {
-			var enemies = getEnemiesInCircle(vclone(tower), tower.range);
+			var enemies = getEnemiesInCircle(vclone(tower.position), tower.range);
 
 			if (enemies.length > 0) {
 				return enemies[0];
@@ -21,32 +21,40 @@ var initTowers = function(behaviorSystem) {
 		});
 	}
 
+	function moveToTargetAndMakeDamage(tower, target, bullet) {
+		var startPosition = vclone(tower.position);
+		return Behavior.run(function*() {
+			yield Behavior.interval(0.2, function(progress) {
+				bullet.position = vlerp(startPosition, target.currentPosition, progress);
+			});
+
+			target.hp -= tower.power;
+
+			var index = target.bullets.indexOf(bullet);
+			target.bullets.splice(index, 1);
+		});
+	}
+
+	function spawnBullet(tower, target) {
+		var startPosition = vclone(tower.position);
+		var bullet = { position: startPosition };
+		target.bullets.push(bullet);
+
+		behaviorSystem.add(moveToTargetAndMakeDamage(tower, target, bullet));
+	}
+
 	function shoot(tower, target) {
-		return Behavior.parallel(
-			Behavior.wait(tower.cooldown),
-			Behavior.run(function*() {
-				var startPosition = vclone(tower);
-				var bullet = { position: startPosition };
-				target.bullets.push(bullet);
-
-				yield Behavior.interval(0.2, function(progress) {
-					bullet.position = vlerp(startPosition, target.currentPosition, progress);
-				});
-
-				target.hp--;
-				var index = target.bullets.indexOf(bullet);
-				target.bullets.splice(index, 1);
-			})
-		);
+		spawnBullet(tower, target);
+		return Behavior.wait(tower.cooldown);
 	}
 
 	function targetAvailable(tower, target) {
-		return isEnemyInCircle(target, vclone(tower), tower.range) && isEnemyAlive(target);
+		return isEnemyInCircle(target, vclone(tower.position), tower.range) && isEnemyAlive(target);
 	}
 
 	return {
 		buildTower: function(cell) {
-			var tower = getDefaultTower(cell.x, cell.y);
+			var tower = getDefaultTower(cell);
 
 			towers.push(tower);
 			setCellContent(cell, 'T');

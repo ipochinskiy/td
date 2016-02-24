@@ -55,11 +55,11 @@ var initDrawer = function() {
 		},
 		drawTower: function(context, cellSize, tower) {
 			var circleCenter = getCircleCenter.bind(null, cellSize);
-			drawCircle(context, 'blue', 3, circleCenter(tower), cellSize.x * 0.45);
+			drawCircle(context, 'blue', 3, circleCenter(tower.position), cellSize.x * 0.45);
 
 			var oldAlpha = context.globalAlpha;
 			context.globalAlpha = 0.4;
-			drawCircle(context, 'blue', 2, circleCenter(tower), cellSize.x * tower.range);
+			drawCircle(context, 'blue', 2, circleCenter(tower.position), cellSize.x * tower.range);
 			context.globalAlpha = oldAlpha;
 		},
 		drawHighlightedCell: function(context, cellSize, cell, color) {
