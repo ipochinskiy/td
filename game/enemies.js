@@ -2,7 +2,7 @@ var enemies = [];
 
 function getDefaultEnemy() {
 	return {
-		hp: 7,
+		hp: 10,
 		speed: 1,
 		currentPosition: vec(4, -1),
 		previousPosition: vec(4, -1),
