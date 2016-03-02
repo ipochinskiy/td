@@ -67,6 +67,12 @@ var initDrawer = function() {
 			context.globalAlpha = 0.4;
 			drawRect(context, color, vmul(cellSize, cell), cellSize);
 			context.globalAlpha = oldAlpha;
+		},
+		drawInventory: function(context, pos, size) {
+			var oldAlpha = context.globalAlpha;
+			context.globalAlpha = 0.6;
+			drawRect(context, 'black', pos, size);
+			context.globalAlpha = oldAlpha;
 		}
 	};
 }

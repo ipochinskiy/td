@@ -4,8 +4,8 @@ function getDefaultEnemy() {
 	return {
 		hp: 10,
 		speed: 1,
-		currentPosition: vec(4, -1),
-		previousPosition: vec(4, -1),
+		currentPosition: vec(-1, 1),
+		previousPosition: vec(-1, 1),
 		bullets: []
 	};
 }

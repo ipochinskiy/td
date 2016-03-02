@@ -3,15 +3,14 @@ const MAP_SYMBOL_PATH = 'x';
 const MAP_SYMBOL_END = '0';
 
 var map = [
-	'    X           ',
-	'   xx           ',
-	'   x      xxx   ',
+	'                ',
+	'Xxxx      xxx   ',
 	'   xx     x x   ',
 	'    xxxx  x x   ',
 	'       xxxx x   ',
 	'            x   ',
-	'       xxxxxx   ',
-	'       0        ',
+	'      0xxxxxx   ',
+	'                ',
 ];
 
 function getCellCenterCoords(context, cellX, cellY) {
