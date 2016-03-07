@@ -1,4 +1,4 @@
-var initDrawer = function() {
+var initDrawer = function(cellSize) {
 	function drawCircle(context, color, lineWidth, center, radius) {
 		context.fillStyle = color;
 		context.strokeStyle = 'black';
@@ -23,12 +23,12 @@ var initDrawer = function() {
 		context.fillText(string, pos.x, pos.y);
 	}
 
-	function getCircleCenter(cellSize, pos) {
+	function getCircleCenter(pos) {
 		return vmul(cellSize, vadd(pos, vec(0.5, 0.5)));
 	}
 
 	return {
-		drawMap: function(context, cellSize) {
+		drawMap: function(context) {
 			map.forEach(function(row, y) {
 				for (var x = 0; x < row.length; x++) {
 					var cell = vec(x, y);
@@ -43,8 +43,8 @@ var initDrawer = function() {
 				}
 			});
 		},
-		drawEnemy: function(context, cellSize, enemy) {
-			var circleCenter = getCircleCenter.bind(null, cellSize);
+		drawEnemy: function(context, enemy) {
+			var circleCenter = getCircleCenter.bind(null);
 			enemy.bullets.forEach(bullet => drawCircle(context, 'black', 1,
 				circleCenter(bullet.position), cellSize.x * 0.02));
 
@@ -53,8 +53,8 @@ var initDrawer = function() {
 			var textPos = vadd(circleCenter(enemy.currentPosition), vec(0, -15));
 			drawString(context, enemy.hp, textPos);
 		},
-		drawTower: function(context, cellSize, tower) {
-			var circleCenter = getCircleCenter.bind(null, cellSize);
+		drawTower: function(context, tower) {
+			var circleCenter = getCircleCenter.bind(null);
 			drawCircle(context, 'blue', 3, circleCenter(tower.position), cellSize.x * 0.45);
 
 			var oldAlpha = context.globalAlpha;
@@ -62,16 +62,16 @@ var initDrawer = function() {
 			drawCircle(context, 'blue', 2, circleCenter(tower.position), cellSize.x * tower.range);
 			context.globalAlpha = oldAlpha;
 		},
-		drawHighlightedCell: function(context, cellSize, cell, color) {
+		drawHighlightedCell: function(context, cell, color) {
 			var oldAlpha = context.globalAlpha;
 			context.globalAlpha = 0.4;
 			drawRect(context, color, vmul(cellSize, cell), cellSize);
 			context.globalAlpha = oldAlpha;
 		},
-		drawInventory: function(context, pos, size) {
+		drawInventory: function(context, inventory) {
 			var oldAlpha = context.globalAlpha;
 			context.globalAlpha = 0.6;
-			drawRect(context, 'black', pos, size);
+			drawRect(context, 'black', inventory.position, inventory.size);
 			context.globalAlpha = oldAlpha;
 		}
 	};
