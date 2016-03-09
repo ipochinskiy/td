@@ -1,5 +1,5 @@
-var initDrawer = function(cellSize) {
-	function drawCircle(context, color, lineWidth, center, radius) {
+var initDrawer = function(context, cellSize) {
+	function drawCircle(color, lineWidth, center, radius) {
 		context.fillStyle = color;
 		context.strokeStyle = 'black';
 		context.lineWidth = lineWidth;
@@ -9,12 +9,12 @@ var initDrawer = function(cellSize) {
 		context.stroke();
 	}
 
-	function drawRect(context, color, pos, size) {
+	function drawRect(color, pos, size) {
 		context.fillStyle = color;
 		context.fillRect(pos.x, pos.y, size.x, size.y);
 	}
 
-	function drawString(context, string, pos) {
+	function drawString(string, pos) {
 		context.fillStyle = 'black';
 		context.font = '16px Arial';
 		context.textAlign = 'center';
@@ -28,7 +28,7 @@ var initDrawer = function(cellSize) {
 	}
 
 	return {
-		drawMap: function(context) {
+		drawMap: function() {
 			map.forEach(function(row, y) {
 				for (var x = 0; x < row.length; x++) {
 					var cell = vec(x, y);
@@ -39,39 +39,31 @@ var initDrawer = function(cellSize) {
 					} else {
 						continue;
 					}
-					drawRect(context, color, vmul(cellSize, vec(x, y)), cellSize);
+					drawRect(color, vmul(cellSize, vec(x, y)), cellSize);
 				}
 			});
 		},
-		drawEnemy: function(context, enemy) {
-			var circleCenter = getCircleCenter.bind(null);
-			enemy.bullets.forEach(bullet => drawCircle(context, 'black', 1,
-				circleCenter(bullet.position), cellSize.x * 0.02));
+		drawEnemy: function(enemy) {
+			enemy.bullets.forEach(bullet => drawCircle('black', 1,
+				getCircleCenter(bullet.position), cellSize.x * 0.02));
 
-			drawCircle(context, 'red', 1, circleCenter(enemy.currentPosition), cellSize.x * 0.1);
+			drawCircle('red', 1, getCircleCenter(enemy.currentPosition), cellSize.x * 0.1);
 
-			var textPos = vadd(circleCenter(enemy.currentPosition), vec(0, -15));
-			drawString(context, enemy.hp, textPos);
+			var textPos = vadd(getCircleCenter(enemy.currentPosition), vec(0, -15));
+			drawString(enemy.hp, textPos);
 		},
-		drawTower: function(context, tower) {
-			var circleCenter = getCircleCenter.bind(null);
-			drawCircle(context, 'blue', 3, circleCenter(tower.position), cellSize.x * 0.45);
+		drawTower: function(tower) {
+			drawCircle('blue', 3, getCircleCenter(tower.position), cellSize.x * 0.45);
 
 			var oldAlpha = context.globalAlpha;
 			context.globalAlpha = 0.4;
-			drawCircle(context, 'blue', 2, circleCenter(tower.position), cellSize.x * tower.range);
+			drawCircle('blue', 2, getCircleCenter(tower.position), cellSize.x * tower.range);
 			context.globalAlpha = oldAlpha;
 		},
-		drawHighlightedCell: function(context, cell, color) {
+		drawHighlightedCell: function(cell, color) {
 			var oldAlpha = context.globalAlpha;
 			context.globalAlpha = 0.4;
-			drawRect(context, color, vmul(cellSize, cell), cellSize);
-			context.globalAlpha = oldAlpha;
-		},
-		drawInventory: function(context, inventory) {
-			var oldAlpha = context.globalAlpha;
-			context.globalAlpha = 0.6;
-			drawRect(context, 'black', inventory.position, inventory.size);
+			drawRect(color, vmul(cellSize, cell), cellSize);
 			context.globalAlpha = oldAlpha;
 		}
 	};
