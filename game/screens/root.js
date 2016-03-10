@@ -39,7 +39,7 @@ var RootScreen = function() {
 				towers.forEach(Drawer.drawTower);
 				enemies.filter(isEnemyAlive).forEach(Drawer.drawEnemy);
 
-				if (blueprint.shown) {
+				if (blueprint.enabled && blueprint.shown) {
 					var color = blueprint.valid ? 'green' : 'red';
 					Drawer.drawHighlightedCell(blueprint.cell, color);
 				}

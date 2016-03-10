@@ -20,7 +20,7 @@ var initInventory = function() {
 			},
 			onClick: function() {
 				blueprint.enabled = !blueprint.enabled;
-				blueprint.shown = blueprint.enabled;
+				blueprint.shown = false;
 			}
 		},
 	];
