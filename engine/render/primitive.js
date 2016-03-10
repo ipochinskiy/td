@@ -35,9 +35,9 @@ var PrimitiveRenderer = (function() {
 				context.arcTo(0, 0, r, 0, r);
 			});
 		},
-		circle: function(context, style, radius) {
+		circle: function(context, style, center, radius) {
 			drawPath(context, style, function() {
-				context.arc(radius, radius, radius, 0, 2 * Math.PI);
+				context.arc(center.x, center.y, radius, 0, 2 * Math.PI);
 			});
 		},
 		triangle: function(context, style, size) {

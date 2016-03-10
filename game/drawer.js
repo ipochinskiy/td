@@ -23,8 +23,8 @@ var initDrawer = function(context, cellSize) {
 		context.fillText(string, pos.x, pos.y);
 	}
 
-	function getCircleCenter(pos) {
-		return vmul(cellSize, vadd(pos, vec(0.5, 0.5)));
+	function getCircleCenter(cell) {
+		return vmul(cellSize, vadd(cell, vec(0.5, 0.5)));
 	}
 
 	return {

@@ -30,11 +30,6 @@ var RootScreen = function() {
 				var context = event.context;
 				var canvasSize = vec(context.canvas.width, context.canvas.height);
 
-				var inventoryHeight = canvasSize.y / 9;
-				var inventoryPositionY = canvasSize.y - inventoryHeight;
-				Inventory.setSize(canvasSize.x, inventoryHeight);
-				Inventory.setPosition(0, inventoryPositionY);
-
 				map.size = vec(canvasSize.x, inventoryPositionY);
 
 				var Drawer = initDrawer(context, getCellSize(map.size));
@@ -49,7 +44,13 @@ var RootScreen = function() {
 					Drawer.drawHighlightedCell(blueprint.cell, color);
 				}
 
-				Inventory.render(context);
+				var inventoryHeight = canvasSize.y / 9;
+				var inventoryPositionY = canvasSize.y - inventoryHeight;
+
+				var inventorySize = vec(canvasSize.x, inventoryHeight);
+				var inventoryPosition = vec(0, inventoryPositionY);
+
+				Inventory.render(context, inventoryPosition, inventorySize);
 			}
 		}),
 		function (event) {
@@ -78,10 +79,11 @@ var RootScreen = function() {
 					Behavior.type('mousedown')
 				);
 
-				var item = Inventory.getItem(event.pos);
+				var item = Inventory.getHoveredItem(event.pos);
 				if (item && item.type === 'button') {
 					item.onClick();
-				} else if (isMouseOverMap(event.pos, map) && blueprint.valid) {
+					console.log('blueprint:', blueprint);
+				} else if (isMouseOverMap(event.pos, map) && blueprint.enabled && blueprint.valid) {
 					behaviorSystem.add(Tower.buildTower(blueprint.cell));
 					blueprint.enabled = false;
 				}
