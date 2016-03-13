@@ -1,9 +1,3 @@
-function isMouseOverMap(cursor, map) {
-	var sum = vadd(map.position, map.size);
-	return map.position.x <= cursor.x && cursor.x <= sum.x &&
-		map.position.y <= cursor.y && cursor.y <= sum.y;
-}
-
 function isPointInsideRect(point, rect) {
 	var sum = vadd(rect.pos, rect.size);
 	return rect.pos.x <= point.x && point.x <= sum.x &&
@@ -13,7 +7,7 @@ function isPointInsideRect(point, rect) {
 var blueprint = { cell: vec(0, 0), valid: false, shown: false, enabled: false };
 
 var RootScreen = function() {
-	var map = { position: vec(0, 0), size: vec(0, 0) };
+	var map = { pos: vec(0, 0), size: vec(0, 0) };
 
 	var behaviorSystem = BehaviorSystem();
 
@@ -30,6 +24,9 @@ var RootScreen = function() {
 				var context = event.context;
 				var canvasSize = vec(context.canvas.width, context.canvas.height);
 
+				var inventoryHeight = canvasSize.y / 9;
+				var inventoryPositionY = canvasSize.y - inventoryHeight;
+
 				map.size = vec(canvasSize.x, inventoryPositionY);
 
 				var Drawer = initDrawer(context, getCellSize(map.size));
@@ -43,9 +40,6 @@ var RootScreen = function() {
 					var color = blueprint.valid ? 'green' : 'red';
 					Drawer.drawHighlightedCell(blueprint.cell, color);
 				}
-
-				var inventoryHeight = canvasSize.y / 9;
-				var inventoryPositionY = canvasSize.y - inventoryHeight;
 
 				var inventorySize = vec(canvasSize.x, inventoryHeight);
 				var inventoryPosition = vec(0, inventoryPositionY);
@@ -66,7 +60,7 @@ var RootScreen = function() {
 						while (true) {
 							var event = yield Behavior.type('mousemove');
 							if (blueprint.enabled) {
-								if (isMouseOverMap(event.pos, map)) {
+								if (isPointInsideRect(event.pos, map)) {
 									blueprint.cell = getCellByCoords(map.size, event.pos);
 									blueprint.valid = isCellFree(blueprint.cell);
 									blueprint.shown = true;
@@ -82,8 +76,7 @@ var RootScreen = function() {
 				var item = Inventory.getHoveredItem(event.pos);
 				if (item && item.type === 'button') {
 					item.onClick();
-					console.log('blueprint:', blueprint);
-				} else if (isMouseOverMap(event.pos, map) && blueprint.enabled && blueprint.valid) {
+				} else if (isPointInsideRect(event.pos, map) && blueprint.enabled && blueprint.valid) {
 					behaviorSystem.add(Tower.buildTower(blueprint.cell));
 					blueprint.enabled = false;
 				}
