@@ -1,41 +1,57 @@
-var initInventory = function() {
-	const inventoryItemSizeMultiplier = 0.9;
+const inventoryItemSizeMultiplier = 0.9;
 
-	var inventory = { pos: vec(0, 0), size: vec(0, 0) };
+const getBaseCellSize = (inventorySize) => vdiv(inventorySize, vec(16, 1));
+const getBaseItemSize = (baseCellSize) => vscale(baseCellSize, inventoryItemSizeMultiplier);
 
-	var content = [
-		{
-			type: 'button',
-			fillsCells: 1,
-			cell: { pos: vec(0, 0), size: vec(0, 0) },
-			render: function(context, cellPos, cellSize) {
-				var style = {
-					fill: 'blue',
-					stroke: 'solid',
-					lineWidth: 2
-				};
-				var center = vadd(cellPos, vscale(cellSize, 0.5));
-				var radius = getBaseItemSize(cellSize).y * 0.5;
-				PrimitiveRenderer.circle(context, style, center, radius);
-			},
-			onClick: function() {
-				blueprint.enabled = !blueprint.enabled;
-				blueprint.shown = false;
-			}
+var itemsMap = {
+	addTowerButton: {
+		render: function(context, item) {
+			var style = {
+				fill: 'blue',
+				stroke: 'solid',
+				lineWidth: 2
+			};
+			var center = vadd(item.pos, vscale(item.size, 0.5));
+			var radius = getBaseItemSize(item.size).y * 0.5;
+			PrimitiveRenderer.circle(context, style, center, radius);
 		},
-	];
+		onClick: function() {
+			//	TODO: made blueprint blackbox
+			blueprint.enabled = !blueprint.enabled;
+			blueprint.shown = false;
+		}
+	}
+};
 
-
-	const getBaseCellSize = (inventorySize) => vdiv(inventorySize, vec(16, 1));
-	const getBaseItemSize = (baseCellSize) => vscale(baseCellSize, inventoryItemSizeMultiplier);
+var initInventory = function() {
+	var inventory = {
+		pos: vec(0, 0),
+		size: vec(0, 0),
+		content: [
+			{
+				type: 'addTowerButton',
+				pos: vec(0, 0),
+				size: vec(0, 0)
+			},
+		]
+	};
 
 	return {
 		getHoveredItem: function(pos) {
 			if (!isPointInsideRect(pos, inventory)) { return null; }
 
-			for (var i = 0; i < content.length; i++) {
-				if (isPointInsideRect(pos, content[i].cell)) { return content[i]; }
+			for (var i = 0; i < inventory.content.length; i++) {
+				var rect = {
+					pos: inventory.content[i].pos,
+					size: inventory.content[i].size
+				};
+				if (isPointInsideRect(pos, rect)) {
+					var type = inventory.content[i].type;
+					return itemsMap[type];
+				}
 			}
+
+			return null;
 		},
 		render: function(context, inventoryPos, inventorySize) {
 			inventory.pos = vclone(inventoryPos);
@@ -51,12 +67,14 @@ var initInventory = function() {
 			context.globalAlpha = oldAlpha;
 
 			var singleCellSize = getBaseCellSize(inventory.size);
-			content.forEach(function(item, index) {
+			inventory.content.forEach(function(item, index) {
 				var indent = singleCellSize.x * index;
-				var cellPos = vadd(inventory.pos, vec(indent, 0));
-				var cellSize = vmul(singleCellSize, vec(item.fillsCells, 1));
-				item.cell = { pos: cellPos, size: cellSize };
-				item.render(context, cellPos, cellSize);
+
+				item.pos = vadd(inventory.pos, vec(indent, 0));
+				item.size = singleCellSize;
+
+				var type = inventory.content[index].type;
+				itemsMap[type].render(context, item);
 			});
 		}
 	}

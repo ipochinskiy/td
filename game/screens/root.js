@@ -74,7 +74,7 @@ var RootScreen = function() {
 				);
 
 				var item = Inventory.getHoveredItem(event.pos);
-				if (item && item.type === 'button') {
+				if (item) {
 					item.onClick();
 				} else if (isPointInsideRect(event.pos, map) && blueprint.enabled && blueprint.valid) {
 					behaviorSystem.add(Tower.buildTower(blueprint.cell));
