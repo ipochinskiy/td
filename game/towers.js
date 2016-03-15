@@ -57,7 +57,7 @@ var initTowers = function(behaviorSystem) {
 			var tower = getDefaultTower(cell);
 
 			towers.push(tower);
-			setCellContent(cell, 'T');
+			Map.setCellContent(cell, 'T');
 
 			return Behavior.run(function* () {
 				while(true) {

@@ -5,8 +5,6 @@ function isPointInsideRect(point, rect) {
 }
 
 var RootScreen = function() {
-	var map = { pos: vec(0, 0), size: vec(0, 0) };
-
 	var behaviorSystem = BehaviorSystem();
 
 	var Enemy = initEnemy(behaviorSystem);
@@ -57,7 +55,7 @@ var RootScreen = function() {
 					PanelItems.cancel(name);
 				} else if (action.apply) {
 					var cell = Map.getCellByCoords(action.pos);
-					Tower.buildTower(cell);
+					behaviorSystem.add(Tower.buildTower(cell));
 					PanelItems.apply(name);
 				}
 			}
