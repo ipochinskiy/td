@@ -9,13 +9,13 @@ function waitForItemSelected() {
 	});
 }
 
-function makeBlueprint(map) {
+function makeBlueprint() {
 	return Behavior.run(function*() {
 		while (true) {
 			var event = yield Behavior.type('mousemove');
 			if (Blueprint.isEnabled()) {
-				if (isPointInsideRect(event.pos, map)) {
-					Blueprint.setCell(map.size, event.pos);
+				if (Map.isMouseOver(event.pos)) {
+					Blueprint.setCell(event.pos);
 					Blueprint.show();
 				} else {
 					Blueprint.hide();
@@ -25,7 +25,7 @@ function makeBlueprint(map) {
 	})
 }
 
-function waitForItemCancelled(name, map) {
+function waitForItemCancelled(name) {
 	return Behavior.run(function*() {
 		while (true) {
 			var event = yield Behavior.type('mousedown');
@@ -36,22 +36,22 @@ function waitForItemCancelled(name, map) {
 	});
 }
 
-function waitForItemApplied(map) {
+function waitForItemApplied() {
 	return Behavior.run(function*() {
 		while (true) {
 			var event = yield Behavior.type('mousedown');
-			if (isPointInsideRect(event.pos, map) && Blueprint.isValid()) {
+			if (Map.isMouseOver(event.pos) && Blueprint.isValid()) {
 				return { pos: event.pos, apply: true };
 			}
 		}
 	});
 }
 
-function waitForItemDropped(name, map) {
+function waitForItemDropped(name) {
 	return Behavior.first(
-		makeBlueprint(map),
-		waitForItemCancelled(name, map),
-		waitForItemApplied(map)
+		makeBlueprint(),
+		waitForItemCancelled(name),
+		waitForItemApplied()
 	);
 }
 

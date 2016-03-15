@@ -15,8 +15,8 @@ function isStepBack(enemy, step) {
 }
 
 function getNextStep(enemy) {
-	return getNearbyCells(enemy.currentPosition).filter(function(cell) {
-		return isCellPath(cell) && !isStepBack(enemy, cell);
+	return Map.getNearbyCells(enemy.currentPosition).filter(function(cell) {
+		return Map.isCellPath(cell) && !isStepBack(enemy, cell);
 	})[0];
 }
 

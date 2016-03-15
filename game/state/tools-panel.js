@@ -23,6 +23,10 @@ var ToolsPanel = (function() {
 	}
 
 	return {
+		setRect: (pos, size) => {
+			panel.pos = pos;
+			panel.size = size;
+		},
 		getHoveredItem: function(pos) {
 			if (!isPointInsideRect(pos, panel)) { return null; }
 
@@ -36,10 +40,7 @@ var ToolsPanel = (function() {
 
 			return null;
 		},
-		render: function(context, panelPos, panelSize) {
-			panel.pos = vclone(panelPos);
-			panel.size = vclone(panelSize);
-
+		render: function(context) {
 			var oldAlpha = context.globalAlpha;
 			context.globalAlpha = 0.6;
 

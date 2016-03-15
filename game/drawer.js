@@ -28,21 +28,6 @@ var initDrawer = function(context, cellSize) {
 	}
 
 	return {
-		drawMap: function() {
-			map.forEach(function(row, y) {
-				for (var x = 0; x < row.length; x++) {
-					var cell = vec(x, y);
-					if (isCellPath(cell)) {
-						var color = 'gray';
-					} else if (isCellCastle(cell)) {
-						var color =  'green';
-					} else {
-						continue;
-					}
-					drawRect(color, vmul(cellSize, vec(x, y)), cellSize);
-				}
-			});
-		},
 		drawEnemy: function(enemy) {
 			enemy.bullets.forEach(bullet => drawCircle('black', 1,
 				getCircleCenter(bullet.position), cellSize.x * 0.02));
@@ -60,11 +45,5 @@ var initDrawer = function(context, cellSize) {
 			drawCircle('blue', 2, getCircleCenter(tower.position), cellSize.x * tower.range);
 			context.globalAlpha = oldAlpha;
 		},
-		drawHighlightedCell: function(cell, color) {
-			var oldAlpha = context.globalAlpha;
-			context.globalAlpha = 0.4;
-			drawRect(color, vmul(cellSize, cell), cellSize);
-			context.globalAlpha = oldAlpha;
-		}
 	};
 }

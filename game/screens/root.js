@@ -20,26 +20,25 @@ var RootScreen = function() {
 				var context = event.context;
 				var canvasSize = vec(context.canvas.width, context.canvas.height);
 
-				var inventoryHeight = canvasSize.y / 9;
-				var inventoryPositionY = canvasSize.y - inventoryHeight;
+				var toolsPanelHeight = canvasSize.y / 9;
+				var toolsPanelPositionY = canvasSize.y - toolsPanelHeight;
 
-				map.size = vec(canvasSize.x, inventoryPositionY);
+				Map.setSize(vec(canvasSize.x, toolsPanelPositionY));
 
-				var cellSize = getCellSize(map.size);
+				var Drawer = initDrawer(context, Map.getCellSize());
 
-				var Drawer = initDrawer(context, cellSize);
-
-				Drawer.drawMap();
+				Map.render(context);
 
 				towers.forEach(Drawer.drawTower);
 				enemies.filter(isEnemyAlive).forEach(Drawer.drawEnemy);
 
-				Blueprint.render(context, cellSize);
+				Blueprint.render(context);
 
-				var inventorySize = vec(canvasSize.x, inventoryHeight);
-				var inventoryPosition = vec(0, inventoryPositionY);
+				var toolsPanelSize = vec(canvasSize.x, toolsPanelHeight);
+				var toolsPanelPosition = vec(0, toolsPanelPositionY);
+				ToolsPanel.setRect(toolsPanelPosition, toolsPanelSize);
 
-				ToolsPanel.render(context, inventoryPosition, inventorySize);
+				ToolsPanel.render(context);
 			}
 		}),
 		function (event) {
@@ -53,11 +52,11 @@ var RootScreen = function() {
 				var name = yield waitForItemSelected();
 				PanelItems.start(name);
 
-				var action = yield waitForItemDropped(name, map);
+				var action = yield waitForItemDropped(name);
 				if (action.cancel) {
 					PanelItems.cancel(name);
 				} else if (action.apply) {
-					var cell = getCellByCoords(map.size, action.pos);
+					var cell = Map.getCellByCoords(action.pos);
 					Tower.buildTower(cell);
 					PanelItems.apply(name);
 				}

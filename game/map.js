@@ -1,72 +1,78 @@
-const MAP_SYMBOL_START = 'X';
-const MAP_SYMBOL_PATH = 'x';
-const MAP_SYMBOL_END = '0';
+var Map = (function() {	
+	const MAP_SYMBOL_START = 'X';
+	const MAP_SYMBOL_PATH = 'x';
+	const MAP_SYMBOL_END = '0';
+	const MAP_SYMBOL_FREE = ' ';
 
-var map = [
-	'                ',
-	'Xxxx      xxx   ',
-	'   xx     x x   ',
-	'    xxxx  x x   ',
-	'       xxxx x   ',
-	'            x   ',
-	'      0xxxxxx   ',
-	'                ',
-];
+	var map = {
+		pos: vec(0, 0), size: vec(0, 0), cellSize: vec(0, 0)
+	};
 
-function getCellCenterCoords(context, cellX, cellY) {
-	var cellSize = getCellSize(context);
-	return vec(cellSize.x * (cellX + 0.5), cellSize.y * (cellY + 0.5));
-}
-
-function getCellSize(size) {
-	return vdiv(size, vec(map[0].length, map.length));
-}
-
-function isCellPath(cell) {
-	var content = getCellContent(cell);
-	return content === MAP_SYMBOL_PATH || content === MAP_SYMBOL_START;
-}
-
-function isCellCastle(cell) {
-	var content = getCellContent(cell);
-	return content === MAP_SYMBOL_END;
-}
-
-function setCellContent(cell, content) {
-	map[cell.y] = map[cell.y].substr(0, cell.x) + content + map[cell.y].substr(cell.x + 1);
-}
-
-function getCellContent(cell) {
-	return (map[cell.y] || [])[cell.x];
-}
-
-function isCellFree(cell) {
-	return getCellContent(cell) === ' ';
-}
-
-function getStartCellCoords() {
-	var coords = {};
-	map.forEach(function(row, y) {
-		var index = row.indexOf(MAP_SYMBOL_START);
-		if (index > -1) {
-			coords.x = index;
-			coords.y = y;
-		}
-	});
-	return coords;
-}
-
-function getNearbyCells(cell) {
-	return [
-		vec(cell.x, cell.y - 1),
-		vec(cell.x, cell.y + 1),
-		vec(cell.x - 1, cell.y),
-		vec(cell.x + 1, cell.y)
+	var level = [
+		'                ',
+		'Xxxx      xxx   ',
+		'   xx     x x   ',
+		'    xxxx  x x   ',
+		'       xxxx x   ',
+		'            x   ',
+		'      0xxxxxx   ',
+		'                ',
 	];
-}
 
-function getCellByCoords(mapSize, coords) {
-	var cellSize = getCellSize(mapSize);
-	return vmap(vdiv(coords, cellSize), Math.floor);
-}
+	const getCellContent = cell => (level[cell.y] || [])[cell.x];
+
+	const isCellPath = cell => {
+		var content = getCellContent(cell);
+		return content === MAP_SYMBOL_PATH || content === MAP_SYMBOL_START;
+	}
+
+	const isCellCastle = cell => getCellContent(cell) === MAP_SYMBOL_END;
+
+	const renderPath = (context, cell) => {
+		PrimitiveRenderer.rect(context, {
+			fill: 'gray'
+		}, vmul(map.cellSize, cell), map.cellSize);
+	}
+
+	const renderCastle = (context, cell) => {
+		PrimitiveRenderer.rect(context, {
+			fill: 'green'
+		}, vmul(map.cellSize, cell), map.cellSize);
+	}
+
+	return {
+		setSize: size => {
+			map.size = size;
+			map.cellSize = vdiv(size, vec(level[0].length, level.length));
+		},
+		getCellSize: () => map.cellSize,
+		getCellByCoords: coords => vmap(vdiv(coords, map.cellSize), Math.floor),
+		getNearbyCells: cell => [
+			vec(cell.x, cell.y - 1),
+			vec(cell.x, cell.y + 1),
+			vec(cell.x - 1, cell.y),
+			vec(cell.x + 1, cell.y)
+		],
+		isMouseOver: pos => isPointInsideRect(pos, map),
+
+		setCellContent: (cell, content) => {
+			level[cell.y] = level[cell.y].substr(0, cell.x) + content + level[cell.y].substr(cell.x + 1);
+		},
+		isCellFree: cell => getCellContent(cell) === MAP_SYMBOL_FREE,
+		isCellPath: isCellPath,
+		render: context => {
+			level.forEach(function(row, y) {
+				for (var x = 0; x < row.length; x++) {
+					var cell = vec(x, y);
+
+					if (isCellPath(cell)) {
+						renderPath(context, cell);
+					} else if (isCellCastle(cell)) {
+						renderCastle(context, cell);
+					}
+				}
+			});
+		},
+	};
+})();
 
