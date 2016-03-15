@@ -4,14 +4,10 @@ function isPointInsideRect(point, rect) {
 		rect.pos.y <= point.y && point.y <= sum.y;
 }
 
-var blueprint = { cell: vec(0, 0), valid: false, shown: false, enabled: false };
-
 var RootScreen = function() {
 	var map = { pos: vec(0, 0), size: vec(0, 0) };
 
 	var behaviorSystem = BehaviorSystem();
-
-	var Inventory = initInventory();
 
 	var Enemy = initEnemy(behaviorSystem);
 	var Tower = initTowers(behaviorSystem);
@@ -29,22 +25,21 @@ var RootScreen = function() {
 
 				map.size = vec(canvasSize.x, inventoryPositionY);
 
-				var Drawer = initDrawer(context, getCellSize(map.size));
+				var cellSize = getCellSize(map.size);
+
+				var Drawer = initDrawer(context, cellSize);
 
 				Drawer.drawMap();
 
 				towers.forEach(Drawer.drawTower);
 				enemies.filter(isEnemyAlive).forEach(Drawer.drawEnemy);
 
-				if (blueprint.enabled && blueprint.shown) {
-					var color = blueprint.valid ? 'green' : 'red';
-					Drawer.drawHighlightedCell(blueprint.cell, color);
-				}
+				Blueprint.render(context, cellSize);
 
 				var inventorySize = vec(canvasSize.x, inventoryHeight);
 				var inventoryPosition = vec(0, inventoryPositionY);
 
-				Inventory.render(context, inventoryPosition, inventorySize);
+				ToolsPanel.render(context, inventoryPosition, inventorySize);
 			}
 		}),
 		function (event) {
@@ -55,32 +50,15 @@ var RootScreen = function() {
 			behaviorSystem.add(Wave.spawnWave());
 
 			while(true) {
-				var event = yield Behavior.first(
-					Behavior.run(function*() {
-						while (true) {
-							var event = yield Behavior.type('mousemove');
-							if (blueprint.enabled) {
-								if (isPointInsideRect(event.pos, map)) {
-									blueprint.cell = getCellByCoords(map.size, event.pos);
-									blueprint.valid = isCellFree(blueprint.cell);
-									blueprint.shown = true;
-								} else {
-									blueprint.shown = false;
-								}
-							}
-						}
-					}),
-					Behavior.type('mousedown')
-				);
+				var item = yield waitForItemSelected();
+				item.onClick();
 
-				var item = Inventory.getHoveredItem(event.pos);
-				if (item) {
-					item.onClick();
-				} else if (isPointInsideRect(event.pos, map) && blueprint.enabled && blueprint.valid) {
-					behaviorSystem.add(Tower.buildTower(blueprint.cell));
-					blueprint.enabled = false;
+				var pos = yield waitForItemDropped(item, map);
+				if (ToolsPanel.getHoveredItem(pos) === item) {
+					item.onCancel();
+				} else if (isPointInsideRect(pos, map)) {
+					item.apply(cell);
 				}
-
 			}
 		})
 	);

@@ -65,8 +65,8 @@ function getNearbyCells(cell) {
 	];
 }
 
-function getCellByCoords(canvasSize, coords) {
-	var cellSize = getCellSize(canvasSize);
+function getCellByCoords(mapSize, coords) {
+	var cellSize = getCellSize(mapSize);
 	return vmap(vdiv(coords, cellSize), Math.floor);
 }
 
