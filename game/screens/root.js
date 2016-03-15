@@ -50,16 +50,16 @@ var RootScreen = function() {
 			behaviorSystem.add(Wave.spawnWave());
 
 			while(true) {
-				var item = yield waitForItemSelected();
-				item.onClick();
+				var name = yield waitForItemSelected();
+				PanelItems.start(name);
 
-				var action = yield waitForItemDropped(item, map);
+				var action = yield waitForItemDropped(name, map);
 				if (action.cancel) {
-					item.onCancel();
+					PanelItems.cancel(name);
 				} else if (action.apply) {
 					var cell = getCellByCoords(map.size, action.pos);
 					Tower.buildTower(cell);
-					item.apply();
+					PanelItems.apply(name);
 				}
 			}
 		})

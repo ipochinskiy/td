@@ -25,11 +25,11 @@ function makeBlueprint(map) {
 	})
 }
 
-function waitForItemCancelled(item, map) {
+function waitForItemCancelled(name, map) {
 	return Behavior.run(function*() {
 		while (true) {
 			var event = yield Behavior.type('mousedown');
-			if (ToolsPanel.getHoveredItem(event.pos) === item) {
+			if (ToolsPanel.getHoveredItem(event.pos) === name) {
 				return { pos: event.pos, cancel: true };
 			}
 		}
@@ -47,10 +47,10 @@ function waitForItemApplied(map) {
 	});
 }
 
-function waitForItemDropped(item, map) {
+function waitForItemDropped(name, map) {
 	return Behavior.first(
 		makeBlueprint(map),
-		waitForItemCancelled(item, map),
+		waitForItemCancelled(name, map),
 		waitForItemApplied(map)
 	);
 }
