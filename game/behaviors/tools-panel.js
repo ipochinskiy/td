@@ -25,22 +25,33 @@ function makeBlueprint(map) {
 	})
 }
 
+function waitForItemCancelled(item, map) {
+	return Behavior.run(function*() {
+		while (true) {
+			var event = yield Behavior.type('mousedown');
+			if (ToolsPanel.getHoveredItem(event.pos) === item) {
+				return { pos: event.pos, cancel: true };
+			}
+		}
+	});
+}
+
+function waitForItemApplied(map) {
+	return Behavior.run(function*() {
+		while (true) {
+			var event = yield Behavior.type('mousedown');
+			if (isPointInsideRect(event.pos, map) && Blueprint.isValid()) {
+				return { pos: event.pos, apply: true };
+			}
+		}
+	});
+}
+
 function waitForItemDropped(item, map) {
 	return Behavior.first(
 		makeBlueprint(map),
-		Behavior.run(function*() {
-			var event = yield Behavior.type('mousedown');
-			return event;
-			// if (Blueprint.isEnabled()) {
-			// 	if (isPointInsideRect(event.pos, map)) {
-			// 		return event
-			// 		var cell = getCellByCoords(map.size, event.pos);
-			// 		behaviorSystem.add(addTower(cell));
-			// 	} else if () {
-			// 		Blueprint.disable();
-			// 	}
-			// }
-		})
+		waitForItemCancelled(item, map),
+		waitForItemApplied(map)
 	);
 }
 

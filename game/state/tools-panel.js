@@ -16,7 +16,7 @@ var itemsMap = {
 		},
 		onClick: () => Blueprint.enable(),
 		onCancel: () => Blueprint.disable(),
-		apply: () => {}
+		apply: () => Blueprint.disable() || Blueprint.hide()
 	}
 };
 

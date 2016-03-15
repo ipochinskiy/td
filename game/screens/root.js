@@ -53,11 +53,13 @@ var RootScreen = function() {
 				var item = yield waitForItemSelected();
 				item.onClick();
 
-				var pos = yield waitForItemDropped(item, map);
-				if (ToolsPanel.getHoveredItem(pos) === item) {
+				var action = yield waitForItemDropped(item, map);
+				if (action.cancel) {
 					item.onCancel();
-				} else if (isPointInsideRect(pos, map)) {
-					item.apply(cell);
+				} else if (action.apply) {
+					var cell = getCellByCoords(map.size, action.pos);
+					Tower.buildTower(cell);
+					item.apply();
 				}
 			}
 		})
