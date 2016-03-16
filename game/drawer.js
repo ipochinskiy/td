@@ -9,11 +9,6 @@ var initDrawer = function(context, cellSize) {
 		context.stroke();
 	}
 
-	function drawRect(color, pos, size) {
-		context.fillStyle = color;
-		context.fillRect(pos.x, pos.y, size.x, size.y);
-	}
-
 	function drawString(string, pos) {
 		context.fillStyle = 'black';
 		context.font = '16px Arial';
@@ -23,27 +18,32 @@ var initDrawer = function(context, cellSize) {
 		context.fillText(string, pos.x, pos.y);
 	}
 
-	function getCircleCenter(cell) {
-		return vmul(cellSize, vadd(cell, vec(0.5, 0.5)));
-	}
-
 	return {
 		drawEnemy: function(enemy) {
-			enemy.bullets.forEach(bullet => drawCircle('black', 1,
-				getCircleCenter(bullet.position), cellSize.x * 0.02));
+			const bulletRadiusMultiplier = 0.02;
+			const bulletRadius = cellSize.x * bulletRadiusMultiplier;
 
-			drawCircle('red', 1, getCircleCenter(enemy.currentPosition), cellSize.x * 0.1);
+			enemy.bullets.forEach(function(bullet) {
+				PrimitiveRenderer.circle(context, {
+					fill: 'black',
+					stroke: 'black',
+					lineWidth: 1
+				}, getCellCenterCoords(bullet.pos), bulletRadius);
+			});
 
-			var textPos = vadd(getCircleCenter(enemy.currentPosition), vec(0, -15));
+			const enemyRadiusMultiplier = 0.1;
+			const enemyRadius = cellSize.x * enemyRadiusMultiplier;
+
+			var enemyCenter = getCellCenterCoords(enemy.currentPosition);
+
+			PrimitiveRenderer.circle(context, {
+				fill: 'red',
+				stroke: 'black',
+				lineWidth: 1
+			}, enemyCenter, enemyRadius);
+
+			var textPos = vadd(enemyCenter, vec(0, -15));
 			drawString(enemy.hp, textPos);
-		},
-		drawTower: function(tower) {
-			drawCircle('blue', 3, getCircleCenter(tower.position), cellSize.x * 0.45);
-
-			var oldAlpha = context.globalAlpha;
-			context.globalAlpha = 0.4;
-			drawCircle('blue', 2, getCircleCenter(tower.position), cellSize.x * tower.range);
-			context.globalAlpha = oldAlpha;
 		},
 	};
 }

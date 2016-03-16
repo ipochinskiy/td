@@ -24,13 +24,8 @@ function isEnemyAlive(enemy) {
 	return enemy.hp > 0;
 }
 
-function isEnemyInCircle(enemy, center, r) {
-	var pos = vclone(enemy.currentPosition);
-	return Math.sqrt(Math.pow(pos.x - center.x, 2) + Math.pow(pos.y - center.y, 2)) <= r;
-}
-
 function getEnemiesInCircle(pos, r) {
-	return enemies.filter(enemy => isEnemyAlive(enemy) && isEnemyInCircle(enemy, pos, r));
+	return enemies.filter(enemy => isEnemyAlive(enemy) && isPointInCircle(enemy, pos, r));
 }
 
 var initEnemy = function(behaviorSystem) {

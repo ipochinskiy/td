@@ -4,11 +4,19 @@ function isPointInsideRect(point, rect) {
 		rect.pos.y <= point.y && point.y <= sum.y;
 }
 
+function isPointInCircle(enemy, center, r) {
+	var pos = vclone(enemy.currentPosition);
+	return Math.sqrt(Math.pow(pos.x - center.x, 2) + Math.pow(pos.y - center.y, 2)) <= r;
+}
+
+const getCellCenterCoords = cell => vmul(Map.getCellSize(), vadd(cell, vec(0.5, 0.5)));
+
+var towers = [];
+
 var RootScreen = function() {
 	var behaviorSystem = BehaviorSystem();
 
 	var Enemy = initEnemy(behaviorSystem);
-	var Tower = initTowers(behaviorSystem);
 	var Wave = initWaves(Enemy.spawnEnemy);
 
 	return Behavior.first(
@@ -27,7 +35,7 @@ var RootScreen = function() {
 
 				Map.render(context);
 
-				towers.forEach(Drawer.drawTower);
+				towers.forEach(Tower.render.bind(null, context));
 				enemies.filter(isEnemyAlive).forEach(Drawer.drawEnemy);
 
 				Blueprint.render(context);
@@ -55,7 +63,8 @@ var RootScreen = function() {
 					PanelItems.cancel(name);
 				} else if (action.apply) {
 					var cell = Map.getCellByCoords(action.pos);
-					behaviorSystem.add(Tower.buildTower(cell));
+					var towerBehavior = buildTower(behaviorSystem, cell);
+					behaviorSystem.add(towerBehavior);
 					PanelItems.apply(name);
 				}
 			}
