@@ -1,3 +1,12 @@
+var waves = [
+	{ enemiesCount: 2, delay: 1 },
+	{ enemiesCount: 5, delay: 5 },
+	{ enemiesCount: 10, delay: 8 },
+	{ enemiesCount: 20, delay: 15 },
+];
+
+var enemies = [];
+
 var Enemy = (function() {
 	const bulletRadiusMultiplier = 0.02;
 	const enemyRadiusMultiplier = 0.1;

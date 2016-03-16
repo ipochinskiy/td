@@ -20,5 +20,24 @@ function goToTheCastle(enemy) {
 function spawnEnemy(behaviorSystem) {
 	var enemy = Enemy.getDefaultEnemy();
 	enemies.push(enemy);
-	behaviorSystem.add(goToTheCastle(enemy));
+	return goToTheCastle(enemy);
+}
+
+function runWaves(behaviorSystem) {
+	return Behavior.run(function*() {
+		for (var i = 0; i < waves.length; i++) {
+			var wave = waves[i];
+			if (wave.delay > 0) {
+				yield Behavior.wait(wave.delay);
+			}
+
+			for (var j = 0; j < wave.enemiesCount; j++) {
+				if (j > 0) {
+					yield Behavior.wait(1);
+				}
+
+				behaviorSystem.add(spawnEnemy());
+			}
+		};
+	});
 }

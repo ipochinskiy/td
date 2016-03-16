@@ -11,13 +11,8 @@ function isPointInCircle(enemy, center, r) {
 
 const getCellCenterCoords = cell => vmul(Map.getCellSize(), vadd(cell, vec(0.5, 0.5)));
 
-var towers = [];
-var enemies = [];
-
 var RootScreen = function() {
 	var behaviorSystem = BehaviorSystem();
-
-	var Wave = initWaves(spawnEnemy.bind(null, behaviorSystem));
 
 	return Behavior.first(
 		Behavior.run(function*() {
@@ -48,7 +43,7 @@ var RootScreen = function() {
 			return { done: false };
 		},
 		Behavior.run(function*() {
-			behaviorSystem.add(Wave.spawnWave());
+			behaviorSystem.add(runWaves(behaviorSystem));
 
 			while(true) {
 				var name = yield waitForItemSelected();

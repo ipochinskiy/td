@@ -1,3 +1,5 @@
+var towers = [];
+
 var Tower = (function() {
 	const towerRadiusMultiplier = 0.45;
 	const getTowerRadius = cellSize => cellSize.x * towerRadiusMultiplier;
