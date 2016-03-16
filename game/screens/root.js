@@ -12,12 +12,12 @@ function isPointInCircle(enemy, center, r) {
 const getCellCenterCoords = cell => vmul(Map.getCellSize(), vadd(cell, vec(0.5, 0.5)));
 
 var towers = [];
+var enemies = [];
 
 var RootScreen = function() {
 	var behaviorSystem = BehaviorSystem();
 
-	var Enemy = initEnemy(behaviorSystem);
-	var Wave = initWaves(Enemy.spawnEnemy);
+	var Wave = initWaves(spawnEnemy.bind(null, behaviorSystem));
 
 	return Behavior.first(
 		Behavior.run(function*() {
@@ -29,22 +29,18 @@ var RootScreen = function() {
 				var toolsPanelHeight = canvasSize.y / 9;
 				var toolsPanelPositionY = canvasSize.y - toolsPanelHeight;
 
-				Map.setSize(vec(canvasSize.x, toolsPanelPositionY));
-
-				var Drawer = initDrawer(context, Map.getCellSize());
-
-				Map.render(context);
-
-				towers.forEach(Tower.render.bind(null, context));
-				enemies.filter(isEnemyAlive).forEach(Drawer.drawEnemy);
-
-				Blueprint.render(context);
-
 				var toolsPanelSize = vec(canvasSize.x, toolsPanelHeight);
 				var toolsPanelPosition = vec(0, toolsPanelPositionY);
 				ToolsPanel.setRect(toolsPanelPosition, toolsPanelSize);
+				Map.setSize(vec(canvasSize.x, toolsPanelPositionY));
 
+				Map.render(context);
 				ToolsPanel.render(context);
+
+				Tower.renderTowers(context);
+				Enemy.renderEnemies(context);
+
+				Blueprint.render(context);
 			}
 		}),
 		function (event) {

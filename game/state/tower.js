@@ -14,6 +14,18 @@ var Tower = (function() {
 		lineWidth: 2
 	};
 
+	const renderTower = (context, tower) => {
+		var cellSize = Map.getCellSize();
+
+		var towerCenter = getCellCenterCoords(tower.pos);
+		PrimitiveRenderer.circle(context, towerRenderStyle, towerCenter, getTowerRadius(cellSize));
+
+		var oldAlpha = context.globalAlpha;
+		context.globalAlpha = 0.4;
+		PrimitiveRenderer.circle(context, rangeRenderStyle, towerCenter, cellSize.x * tower.range);
+		context.globalAlpha = oldAlpha;
+	}
+
 	return {
 		getDefaultTower: cell => ({
 			pos: vclone(cell),
@@ -23,17 +35,9 @@ var Tower = (function() {
 			slots: []
 		}),
 		isTargetAvailable: (tower, target) =>
-			isPointInCircle(target, tower.pos, tower.range) && isEnemyAlive(target),
-		render: function(context, tower) {
-			var cellSize = Map.getCellSize();
-
-			var towerCenter = getCellCenterCoords(tower.pos);
-			PrimitiveRenderer.circle(context, towerRenderStyle, towerCenter, getTowerRadius(cellSize));
-
-			var oldAlpha = context.globalAlpha;
-			context.globalAlpha = 0.4;
-			PrimitiveRenderer.circle(context, rangeRenderStyle, towerCenter, cellSize.x * tower.range);
-			context.globalAlpha = oldAlpha;
+			isPointInCircle(target, tower.pos, tower.range) && Enemy.isEnemyAlive(target),
+		renderTowers: function(context) {
+			towers.forEach(renderTower.bind(null, context));
 		},
 	};
 })();

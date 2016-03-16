@@ -1,6 +1,6 @@
 function waitForTarget(tower) {
 	return Behavior.update(function() {
-		var enemies = getEnemiesInCircle(vclone(tower.pos), tower.range);
+		var enemies = Enemy.getEnemiesInCircle(tower.pos, tower.range);
 
 		if (enemies.length > 0) {
 			return enemies[0];
