@@ -4,7 +4,7 @@ var ToolsPanel = (function() {
 	var panel = {
 		pos: vec(0, 0),
 		size: vec(0, 0),
-		content: [ 'addTowerButton', 'powerBooster' ]
+		content: [ 'addTowerButton', 'powerBooster', 'cooldownBooster' ]
 	};
 
 	const getRect = (pos, size) => ({

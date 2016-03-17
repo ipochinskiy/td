@@ -27,7 +27,10 @@ var Blueprint = (function(type) {
 			blueprint.enabled = true;
 			blueprint.modus = 'booster';
 		},
-		disable: () => blueprint.enabled = false,
+		disable: () => {
+			blueprint.shown = false;
+			blueprint.enabled = false;
+		},
 
 		show: () => blueprint.shown = true,
 		hide: () => blueprint.shown = false,

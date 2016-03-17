@@ -22,6 +22,7 @@ var Tower = (function() {
 		var towerCenter = getCellCenterCoords(tower.pos);
 		PrimitiveRenderer.circle(context, towerRenderStyle, towerCenter, getTowerRadius(cellSize));
 
+		//	just for debug purpose
 		var oldAlpha = context.globalAlpha;
 		context.globalAlpha = 0.4;
 		PrimitiveRenderer.circle(context, rangeRenderStyle, towerCenter, cellSize.x * tower.range);
@@ -36,8 +37,11 @@ var Tower = (function() {
 			cooldown: 0.8,
 			slots: []
 		}),
+		getTowerInCell: cell => towers.filter(tower => veq(tower.pos, cell))[0],
+
 		isTargetAvailable: (tower, target) =>
 			isPointInCircle(target, tower.pos, tower.range) && Enemy.isEnemyAlive(target),
+
 		renderTowers: function(context) {
 			towers.forEach(renderTower.bind(null, context));
 		},

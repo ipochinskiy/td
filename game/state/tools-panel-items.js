@@ -3,6 +3,7 @@ var PanelItems = (function() {
 
 	const items = {
 		addTowerButton: {
+			description: { type: 'tower' },
 			render: function(context, rect) {
 				var style = {
 					fill: 'blue',
@@ -13,14 +14,9 @@ var PanelItems = (function() {
 				var radius = rect.size.y * panelItemSizeMultiplier * 0.5;
 				PrimitiveRenderer.circle(context, style, center, radius);
 			},
-			start: () => Blueprint.enableModusTower(),
-			cancel: () => Blueprint.disable(),
-			apply: () => {
-				Blueprint.hide();
-				Blueprint.disable();
-			}
 		},
 		powerBooster: {
+			description: { type: 'booster', boost: 'power' },
 			render: function(context, rect) {
 				var style = {
 					fill: 'orange',
@@ -31,36 +27,24 @@ var PanelItems = (function() {
 				var radius = rect.size.y * panelItemSizeMultiplier * 0.5;
 				PrimitiveRenderer.circle(context, style, center, radius);
 			},
-			start: () => Blueprint.enableModusBooster(),
-			cancel: () => Blueprint.disable(),
-			apply: () => {
-				Blueprint.hide();
-				Blueprint.disable();
-			}
+		},
+		cooldownBooster: {
+			description: { type: 'booster', boost: 'cooldown' },
+			render: function(context, rect) {
+				var style = {
+					fill: 'magenta',
+					stroke: 'solid',
+					lineWidth: 5
+				};
+				var center = vadd(rect.pos, vscale(rect.size, 0.5));
+				var radius = rect.size.y * panelItemSizeMultiplier * 0.5;
+				PrimitiveRenderer.circle(context, style, center, radius);
+			},
 		},
 	};
 
-	var activeItem;
-
 	return {
-		start: name => {
-			if (items[name]) {
-				activeItem = name;
-				items[name].start();
-			}
-		},
-		apply: name => {
-			if (items[name]) {
-				activeItem = undefined;
-				items[name].apply();
-			}
-		},
-		cancel: name => {
-			if (items[name]) {
-				activeItem = undefined;
-				items[name].cancel();
-			}
-		},
+		getItemDescription: name => items[name] && items[name].description || {},
 		render: (context, name, rect) => {
 			if (items[name]) {
 				items[name].render(context, rect);

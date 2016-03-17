@@ -5,7 +5,13 @@ function waitForItemSelected() {
 			var event = yield Behavior.type('mousedown');
 			name = ToolsPanel.getHoveredItem(event.pos);
 		}
-		PanelItems.start(name);
+
+		if (PanelItems.getItemDescription(name).type === 'tower') {
+			Blueprint.enableModusTower();
+		} else {
+			Blueprint.enableModusBooster();
+		}
+
 		return name;
 	});
 }
@@ -31,21 +37,44 @@ function waitForItemCancelled(name) {
 		while (true) {
 			var event = yield Behavior.type('mousedown');
 			if (ToolsPanel.getHoveredItem(event.pos) === name) {
-				return PanelItems.cancel(name);
+				return Blueprint.disable();
 			}
 		}
 	});
+}
+
+function applyBoosterOnCell(cell, boostEffect) {
+	var tower = Tower.getTowerInCell(cell);
+	if (!tower) { return; }
+
+	switch (boostEffect) {
+		case 'power': {
+			tower.power *= 2;
+			break;
+		}
+		case 'cooldown': {
+			tower.cooldown /= 2;
+			break;
+		}
+	}
 }
 
 function waitForItemApplied(behaviorSystem, name) {
 	return Behavior.run(function*() {
 		while (true) {
 			var event = yield Behavior.type('mousedown');
+
 			if (Map.isMouseOver(event.pos) && Blueprint.isValid()) {
 				var cell = Map.getCellByCoords(event.pos);
-				var towerBehavior = buildTower(behaviorSystem, cell);
-				behaviorSystem.add(towerBehavior);
-				return PanelItems.apply(name);
+				var itemDescription = PanelItems.getItemDescription(name);
+
+				if (itemDescription.type === 'tower') {
+					var towerBehavior = buildTower(behaviorSystem, cell);
+					behaviorSystem.add(towerBehavior);
+				} else {
+					applyBoosterOnCell(cell, itemDescription.boost);
+				}
+				return Blueprint.disable();
 			}
 		}
 	});
