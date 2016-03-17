@@ -29,12 +29,6 @@ function spawnBullet(tower, target) {
 	return moveToTargetAndMakeDamage(tower, target, bullet);
 }
 
-function shoot(behaviorSystem, tower, target) {
-	var bulletBehavior = spawnBullet(tower, target);
-	behaviorSystem.add(bulletBehavior);
-	return Behavior.wait(tower.cooldown);
-}
-
 function buildTower(behaviorSystem, cell) {
 	var tower = Tower.getDefaultTower(cell);
 
@@ -45,7 +39,8 @@ function buildTower(behaviorSystem, cell) {
 		while (true) {
 			var target = yield waitForTarget(tower);
 			while (Tower.isTargetAvailable(tower, target)) {
-				yield shoot(behaviorSystem, tower, target);
+				behaviorSystem.add(spawnBullet(tower, target));
+				yield Behavior.wait(tower.cooldown);
 			}
 		}
 	});

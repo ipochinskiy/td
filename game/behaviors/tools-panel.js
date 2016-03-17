@@ -1,15 +1,16 @@
 function waitForItemSelected() {
 	return Behavior.run(function*() {
-		var item;
-		while (!item) {
+		var name;
+		while (!name) {
 			var event = yield Behavior.type('mousedown');
-			item = ToolsPanel.getHoveredItem(event.pos);
+			name = ToolsPanel.getHoveredItem(event.pos);
 		}
-		return item;
+		PanelItems.start(name);
+		return name;
 	});
 }
 
-function makeBlueprint() {
+function makeBlueprintFollowMouse() {
 	return Behavior.run(function*() {
 		while (true) {
 			var event = yield Behavior.type('mousemove');
@@ -30,28 +31,31 @@ function waitForItemCancelled(name) {
 		while (true) {
 			var event = yield Behavior.type('mousedown');
 			if (ToolsPanel.getHoveredItem(event.pos) === name) {
-				return { pos: event.pos, cancel: true };
+				return PanelItems.cancel(name);
 			}
 		}
 	});
 }
 
-function waitForItemApplied() {
+function waitForItemApplied(behaviorSystem, name) {
 	return Behavior.run(function*() {
 		while (true) {
 			var event = yield Behavior.type('mousedown');
 			if (Map.isMouseOver(event.pos) && Blueprint.isValid()) {
-				return { pos: event.pos, apply: true };
+				var cell = Map.getCellByCoords(event.pos);
+				var towerBehavior = buildTower(behaviorSystem, cell);
+				behaviorSystem.add(towerBehavior);
+				return PanelItems.apply(name);
 			}
 		}
 	});
 }
 
-function waitForItemDropped(name) {
+function waitForItemDropped(behaviorSystem, name) {
 	return Behavior.first(
-		makeBlueprint(),
+		makeBlueprintFollowMouse(),
 		waitForItemCancelled(name),
-		waitForItemApplied()
+		waitForItemApplied(behaviorSystem, name)
 	);
 }
 

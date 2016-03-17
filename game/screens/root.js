@@ -47,17 +47,7 @@ var RootScreen = function() {
 
 			while(true) {
 				var name = yield waitForItemSelected();
-				PanelItems.start(name);
-
-				var action = yield waitForItemDropped(name);
-				if (action.cancel) {
-					PanelItems.cancel(name);
-				} else if (action.apply) {
-					var cell = Map.getCellByCoords(action.pos);
-					var towerBehavior = buildTower(behaviorSystem, cell);
-					behaviorSystem.add(towerBehavior);
-					PanelItems.apply(name);
-				}
+				yield waitForItemDropped(behaviorSystem, name);
 			}
 		})
 	);
