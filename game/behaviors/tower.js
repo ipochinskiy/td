@@ -33,7 +33,7 @@ function buildTower(behaviorSystem, cell) {
 	var tower = Tower.getDefaultTower(cell);
 
 	towers.push(tower);
-	Map.setCellContent(cell, 'T');
+	Map.setTower(cell);
 
 	return Behavior.run(function*() {
 		while (true) {

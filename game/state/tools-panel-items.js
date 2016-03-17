@@ -3,8 +3,6 @@ var PanelItems = (function() {
 
 	const items = {
 		addTowerButton: {
-			pos: vec(0, 0),
-			size: vec(0, 0),
 			render: function(context, rect) {
 				var style = {
 					fill: 'blue',
@@ -15,13 +13,31 @@ var PanelItems = (function() {
 				var radius = rect.size.y * panelItemSizeMultiplier * 0.5;
 				PrimitiveRenderer.circle(context, style, center, radius);
 			},
-			start: () => Blueprint.enable(),
+			start: () => Blueprint.enableModusTower(),
 			cancel: () => Blueprint.disable(),
 			apply: () => {
 				Blueprint.hide();
 				Blueprint.disable();
 			}
-		}
+		},
+		powerBooster: {
+			render: function(context, rect) {
+				var style = {
+					fill: 'orange',
+					stroke: 'solid',
+					lineWidth: 5
+				};
+				var center = vadd(rect.pos, vscale(rect.size, 0.5));
+				var radius = rect.size.y * panelItemSizeMultiplier * 0.5;
+				PrimitiveRenderer.circle(context, style, center, radius);
+			},
+			start: () => Blueprint.enableModusBooster(),
+			cancel: () => Blueprint.disable(),
+			apply: () => {
+				Blueprint.hide();
+				Blueprint.disable();
+			}
+		},
 	};
 
 	var activeItem;

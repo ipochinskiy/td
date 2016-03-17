@@ -2,6 +2,7 @@ var Map = (function() {
 	const MAP_SYMBOL_START = 'X';
 	const MAP_SYMBOL_PATH = 'x';
 	const MAP_SYMBOL_END = '0';
+	const MAP_SYMBOL_TOWER = 'T';
 	const MAP_SYMBOL_FREE = ' ';
 
 	var map = {
@@ -40,6 +41,9 @@ var Map = (function() {
 		}, vmul(map.cellSize, cell), map.cellSize);
 	}
 
+	const setCellContent = (cell, content) =>
+		level[cell.y] = level[cell.y].substr(0, cell.x) + content + level[cell.y].substr(cell.x + 1);
+
 	return {
 		setSize: size => {
 			map.size = size;
@@ -55,11 +59,12 @@ var Map = (function() {
 		],
 		isMouseOver: pos => isPointInsideRect(pos, map),
 
-		setCellContent: (cell, content) => {
-			level[cell.y] = level[cell.y].substr(0, cell.x) + content + level[cell.y].substr(cell.x + 1);
-		},
+		setTower: (cell) => setCellContent(cell, MAP_SYMBOL_TOWER),
+
 		isCellFree: cell => getCellContent(cell) === MAP_SYMBOL_FREE,
+		isCellTower: cell => getCellContent(cell) === MAP_SYMBOL_TOWER,
 		isCellPath: isCellPath,
+
 		render: context => {
 			level.forEach(function(row, y) {
 				for (var x = 0; x < row.length; x++) {

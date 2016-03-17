@@ -6,7 +6,11 @@ var Blueprint = (function(type) {
 	};
 
 	const isValid = function() {
-		return Map.isCellFree(blueprint.cell);
+		if (blueprint.modus === 'tower') {
+			return Map.isCellFree(blueprint.cell);
+		} else if (blueprint.modus === 'booster') {
+			return Map.isCellTower(blueprint.cell);
+		}
 	}
 
 	return {
@@ -15,7 +19,14 @@ var Blueprint = (function(type) {
 
 		setCell: (pos) => blueprint.cell = Map.getCellByCoords(pos),
 
-		enable: () => blueprint.enabled = true,
+		enableModusTower: () => {
+			blueprint.enabled = true;
+			blueprint.modus = 'tower';
+		},
+		enableModusBooster: () => {
+			blueprint.enabled = true;
+			blueprint.modus = 'booster';
+		},
 		disable: () => blueprint.enabled = false,
 
 		show: () => blueprint.shown = true,
