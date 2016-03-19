@@ -2,52 +2,18 @@ var PanelItems = (function() {
 	const panelItemSizeMultiplier = 0.9;
 
 	const items = {
-		addTowerButton: {
-			description: { type: 'tower' },
-			render: function(context, rect) {
-				var style = {
-					fill: 'blue',
-					stroke: 'solid',
-					lineWidth: 2
-				};
-				var center = vadd(rect.pos, vscale(rect.size, 0.5));
-				var radius = rect.size.y * panelItemSizeMultiplier * 0.5;
-				PrimitiveRenderer.circle(context, style, center, radius);
-			},
-		},
-		powerBooster: {
-			description: { type: 'booster', boost: 'power' },
-			render: function(context, rect) {
-				var style = {
-					fill: 'orange',
-					stroke: 'solid',
-					lineWidth: 5
-				};
-				var center = vadd(rect.pos, vscale(rect.size, 0.5));
-				var radius = rect.size.y * panelItemSizeMultiplier * 0.5;
-				PrimitiveRenderer.circle(context, style, center, radius);
-			},
-		},
-		cooldownBooster: {
-			description: { type: 'booster', boost: 'cooldown' },
-			render: function(context, rect) {
-				var style = {
-					fill: 'magenta',
-					stroke: 'solid',
-					lineWidth: 5
-				};
-				var center = vadd(rect.pos, vscale(rect.size, 0.5));
-				var radius = rect.size.y * panelItemSizeMultiplier * 0.5;
-				PrimitiveRenderer.circle(context, style, center, radius);
-			},
-		},
+		addTowerButton: { type: 'tower' },
+		powerBooster: { type: 'booster', boost: 'power' },
+		cooldownBooster: { type: 'booster', boost: 'cooldown' },
 	};
 
 	return {
-		getItemDescription: name => items[name] && items[name].description || {},
+		getItemDescription: name => items[name] && items[name] || {},
 		render: (context, name, rect) => {
 			if (items[name]) {
-				items[name].render(context, rect);
+				var center = vadd(rect.pos, vscale(rect.size, 0.5));
+				var radius = rect.size.y * panelItemSizeMultiplier * 0.5;
+				PrimitiveRenderer.circle(context, PANEL_ITEMS_STYLE_MAP[name], center, radius);
 			}
 		},
 	};

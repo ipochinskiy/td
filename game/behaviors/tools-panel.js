@@ -43,10 +43,7 @@ function waitForItemCancelled(name) {
 	});
 }
 
-function applyBoosterOnCell(cell, boostEffect) {
-	var tower = Tower.getTowerInCell(cell);
-	if (!tower) { return; }
-
+function applyBoosterOnTower(tower, boostEffect) {
 	switch (boostEffect) {
 		case 'power': {
 			tower.power *= 2;
@@ -72,7 +69,11 @@ function waitForItemApplied(behaviorSystem, name) {
 					var towerBehavior = buildTower(behaviorSystem, cell);
 					behaviorSystem.add(towerBehavior);
 				} else {
-					applyBoosterOnCell(cell, itemDescription.boost);
+					var tower = Tower.getTowerInCell(cell);
+					if (!tower) { return; }
+
+					applyBoosterOnTower(cell, itemDescription.boost);
+					tower.slots.push(name);
 				}
 				return Blueprint.disable();
 			}
