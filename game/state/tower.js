@@ -1,32 +1,53 @@
 var towers = [];
 
 var Tower = (function() {
+	const slotRadiusMultiplier = 0.05;
+	const slotTowerGap = slotRadiusMultiplier * 3;
+
 	const towerRadiusMultiplier = 0.45;
 	const getTowerRadius = cellSize => cellSize.x * towerRadiusMultiplier;
 
-	const towerRenderStyle = {
-		fill: 'blue',
-		stroke: 'black',
-		lineWidth: 3
+	const getSlotStyle = name => {
+		if (name === 'powerBooster') {
+			return STYLE_POWER_BOOSTER_ITEM;
+		} else if (name === 'cooldownBooster') {
+			return STYLE_COOLDOWN_BOOSTER_ITEM;
+		}
 	};
 
-	const rangeRenderStyle = {
-		fill: 'blue',
-		stroke: 'black',
-		lineWidth: 2
-	};
+	const getSlotCenter = (cell, cellSize, slotName, slotIndex) => {
+		const getCenterCoords = coords => vmul(cellSize, vadd(coords, vec(0.5, 0.5)));
+		const slotCellCenterDistance = 0.35;
 
-	const renderTower = (context, tower) => {
-		var cellSize = Map.getCellSize();
+		switch (slotIndex) {
+			case 0: return getCenterCoords(vec(cell.x, cell.y - slotCellCenterDistance));
+			case 1: return getCenterCoords(vec(cell.x + slotCellCenterDistance, cell.y));
+			case 2: return getCenterCoords(vec(cell.x, cell.y + slotCellCenterDistance));
+			case 3: return getCenterCoords(vec(cell.x - slotCellCenterDistance, cell.y));
+			default: return 0;
+		}
+	}
 
-		var towerCenter = getCellCenterCoords(tower.pos);
-		PrimitiveRenderer.circle(context, towerRenderStyle, towerCenter, getTowerRadius(cellSize));
+	const renderTower = (context, cellSize, tower) => {
+		var towerCenter = getCellCenterCoords(tower.pos, cellSize);
+		PrimitiveRenderer.circle(context, STYLE_TOWER, towerCenter, getTowerRadius(cellSize));
 
-		//	just for debug purpose
-		var oldAlpha = context.globalAlpha;
-		context.globalAlpha = 0.4;
-		PrimitiveRenderer.circle(context, rangeRenderStyle, towerCenter, cellSize.x * tower.range);
-		context.globalAlpha = oldAlpha;
+		// //	just for debug purpose
+		// var oldAlpha = context.globalAlpha;
+		// context.globalAlpha = 0.4;
+		// PrimitiveRenderer.circle(context, STYLE_TOWER_RANGE, towerCenter, cellSize.x * tower.range);
+		// context.globalAlpha = oldAlpha;
+
+		var slotsCoordY = towerCenter.y - slotTowerGap;
+
+		for (var i = 0; i < tower.maxSlotsAmount; i++) {
+			var name = tower.slots[i] || '';
+			var style = PANEL_ITEMS_STYLE_MAP[name];
+			var center = getSlotCenter(tower.pos, cellSize, name, i);
+			var radius = cellSize.x * slotRadiusMultiplier;
+
+			PrimitiveRenderer.circle(context, style, center, radius);
+		}
 	}
 
 	return {
@@ -34,7 +55,8 @@ var Tower = (function() {
 			pos: vclone(cell),
 			power: 5,
 			range: 1.5,
-			cooldown: 0.8,
+			cooldown: 1.5,
+			maxSlotsAmount: TOWER_MAX_SLOT_COUNT,
 			slots: []
 		}),
 		getTowerInCell: cell => towers.filter(tower => veq(tower.pos, cell))[0],
@@ -43,7 +65,8 @@ var Tower = (function() {
 			isPointInCircle(target, tower.pos, tower.range) && Enemy.isEnemyAlive(target),
 
 		renderTowers: function(context) {
-			towers.forEach(renderTower.bind(null, context));
+			var cellSize = Map.getCellSize();
+			towers.forEach(renderTower.bind(null, context, cellSize));
 		},
 	};
 })();

@@ -9,7 +9,7 @@ function isPointInCircle(enemy, center, r) {
 	return Math.sqrt(Math.pow(pos.x - center.x, 2) + Math.pow(pos.y - center.y, 2)) <= r;
 }
 
-const getCellCenterCoords = cell => vmul(Map.getCellSize(), vadd(cell, vec(0.5, 0.5)));
+const getCellCenterCoords = (cell, cellSize) => vmul(cellSize || Map.getCellSize(), vadd(cell, vec(0.5, 0.5)));
 
 var RootScreen = function() {
 	var behaviorSystem = BehaviorSystem();
