@@ -72,7 +72,7 @@ function waitForItemApplied(behaviorSystem, name) {
 					var tower = Tower.getTowerInCell(cell);
 					if (!tower) { return; }
 
-					applyBoosterOnTower(cell, itemDescription.boost);
+					applyBoosterOnTower(tower, itemDescription.boost);
 					tower.slots.push(name);
 				}
 				return Blueprint.disable();
