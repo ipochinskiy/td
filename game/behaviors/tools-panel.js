@@ -16,6 +16,8 @@ function waitForItemSelected() {
 	});
 }
 
+const shouldShowBlueprint = pos => !Tower.getTowerInCell(Map.getCellByCoords(pos));
+
 function makeBlueprintFollowMouse() {
 	return Behavior.run(function*() {
 		while (true) {
@@ -23,9 +25,12 @@ function makeBlueprintFollowMouse() {
 			if (Blueprint.isEnabled()) {
 				if (Map.isMouseOver(event.pos)) {
 					Blueprint.setCell(event.pos);
-					Blueprint.show();
-				} else {
-					Blueprint.hide();
+
+					if (shouldShowBlueprint(event.pos)) {
+						Blueprint.show();
+					} else {
+						Blueprint.hide();
+					}
 				}
 			}
 		}

@@ -44,20 +44,26 @@ var Map = (function() {
 	const setCellContent = (cell, content) =>
 		level[cell.y] = level[cell.y].substr(0, cell.x) + content + level[cell.y].substr(cell.x + 1);
 
+	const isMouseOver = pos => isPointInsideRect(pos, map);
+
 	return {
 		setSize: size => {
 			map.size = size;
 			map.cellSize = vdiv(size, vec(level[0].length, level.length));
 		},
 		getCellSize: () => map.cellSize,
-		getCellByCoords: coords => vmap(vdiv(coords, map.cellSize), Math.floor),
+		getCellByCoords: coords => {
+			if (isMouseOver) {
+				return vmap(vdiv(coords, map.cellSize), Math.floor);
+			}
+		},
 		getNearbyCells: cell => [
 			vec(cell.x, cell.y - 1),
 			vec(cell.x, cell.y + 1),
 			vec(cell.x - 1, cell.y),
 			vec(cell.x + 1, cell.y)
 		],
-		isMouseOver: pos => isPointInsideRect(pos, map),
+		isMouseOver: isMouseOver,
 
 		setTower: (cell) => setCellContent(cell, MAP_SYMBOL_TOWER),
 
