@@ -81,11 +81,15 @@ function waitForItemApplied(behaviorSystem, name) {
 	});
 }
 
-function waitForItemDropped(behaviorSystem, name) {
-	return Behavior.first(
-		makeBlueprintFollowMouse(),
-		waitForItemCancelled(name),
-		waitForItemApplied(behaviorSystem, name)
-	);
+function toolsPanelMainBehavior(behaviorSystem) {
+	return Behavior.run(function*() {
+		var name = yield waitForItemSelected();
+
+		yield Behavior.first(
+			makeBlueprintFollowMouse(),
+			waitForItemCancelled(name),
+			waitForItemApplied(behaviorSystem, name)
+		);
+	});
 }
 

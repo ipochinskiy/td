@@ -46,8 +46,10 @@ var RootScreen = function() {
 			behaviorSystem.add(runWaves(behaviorSystem));
 
 			while(true) {
-				var name = yield waitForItemSelected();
-				yield waitForItemDropped(behaviorSystem, name);
+				yield Behavior.first(
+					toolsPanelMainBehavior(behaviorSystem),
+					handleTowerHovering()
+				);
 			}
 		})
 	);

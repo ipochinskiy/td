@@ -7,6 +7,8 @@ var Tower = (function() {
 	const towerRadiusMultiplier = 0.45;
 	const getTowerRadius = cellSize => cellSize.x * towerRadiusMultiplier;
 
+	var hoveredTower;
+
 	const getSlotStyle = name => {
 		if (name === 'powerBooster') {
 			return STYLE_POWER_BOOSTER_ITEM;
@@ -20,23 +22,28 @@ var Tower = (function() {
 		const slotCellCenterDistance = 0.35;
 
 		switch (slotIndex) {
-			case 0: return getCenterCoords(vec(cell.x, cell.y - slotCellCenterDistance));
-			case 1: return getCenterCoords(vec(cell.x + slotCellCenterDistance, cell.y));
-			case 2: return getCenterCoords(vec(cell.x, cell.y + slotCellCenterDistance));
-			case 3: return getCenterCoords(vec(cell.x - slotCellCenterDistance, cell.y));
+			case 0: return getCenterCoords(vsub(cell, vec(0, slotCellCenterDistance)));
+			case 1: return getCenterCoords(vadd(cell, vec(slotCellCenterDistance, 0)));
+			case 2: return getCenterCoords(vadd(cell, vec(0, slotCellCenterDistance)));
+			case 3: return getCenterCoords(vsub(cell, vec(slotCellCenterDistance, 0)));
 			default: return 0;
 		}
+	}
+
+	const renderRange = (context, center, radius) => {
+		var oldAlpha = context.globalAlpha;
+		context.globalAlpha = 0.1;
+		PrimitiveRenderer.circle(context, STYLE_TOWER_RANGE, center, radius);
+		context.globalAlpha = oldAlpha;
 	}
 
 	const renderTower = (context, cellSize, tower) => {
 		var towerCenter = getCellCenterCoords(tower.pos, cellSize);
 		PrimitiveRenderer.circle(context, STYLE_TOWER, towerCenter, getTowerRadius(cellSize));
 
-		// //	just for debug purpose
-		// var oldAlpha = context.globalAlpha;
-		// context.globalAlpha = 0.4;
-		// PrimitiveRenderer.circle(context, STYLE_TOWER_RANGE, towerCenter, cellSize.x * tower.range);
-		// context.globalAlpha = oldAlpha;
+		if (hoveredTower && veq(hoveredTower.pos, tower.pos)) {
+			renderRange(context, towerCenter, cellSize.x * tower.range);
+		}
 
 		var slotsCoordY = towerCenter.y - slotTowerGap;
 
@@ -60,6 +67,9 @@ var Tower = (function() {
 			slots: []
 		}),
 		getTowerInCell: cell => towers.filter(tower => veq(tower.pos, cell))[0],
+
+		setHovered: tower => hoveredTower = tower,
+		unsetHovered: () => hoveredTower = undefined,
 
 		isTargetAvailable: (tower, target) =>
 			isPointInCircle(target, tower.pos, tower.range) && Enemy.isEnemyAlive(target),

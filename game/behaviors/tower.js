@@ -34,6 +34,7 @@ function buildTower(behaviorSystem, cell) {
 
 	towers.push(tower);
 	Map.setTower(cell);
+	Tower.setHovered(tower);
 
 	return Behavior.run(function*() {
 		while (true) {
@@ -41,6 +42,22 @@ function buildTower(behaviorSystem, cell) {
 			while (Tower.isTargetAvailable(tower, target)) {
 				behaviorSystem.add(spawnBullet(tower, target));
 				yield Behavior.wait(tower.cooldown);
+			}
+		}
+	});
+}
+
+function handleTowerHovering() {
+	return Behavior.run(function*() {
+		while (true) {
+			var event = yield Behavior.type('mousemove');
+			if (Map.isMouseOver(event.pos)) {
+				var tower = Tower.getTowerInCell(Map.getCellByCoords(event.pos));
+				if (tower) {
+					Tower.setHovered(tower);
+				} else {
+					Tower.unsetHovered();
+				}
 			}
 		}
 	});
