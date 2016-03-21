@@ -25,6 +25,12 @@ function makeBlueprintFollowMouse() {
 	return Behavior.run(function*() {
 		while (true) {
 			var event = yield Behavior.type('mousemove');
+			if (!Map.isMouseOver(event.pos)) {
+				Blueprint.disable();
+			} else {
+				Blueprint.enable();
+			}
+
 			if (Blueprint.isEnabled()) {
 				if (Map.isMouseOver(event.pos)) {
 					Blueprint.setCell(event.pos);
