@@ -63,13 +63,22 @@ var Map = (function() {
 			vec(cell.x - 1, cell.y),
 			vec(cell.x + 1, cell.y)
 		],
-		isMouseOver: isMouseOver,
+		getStartCell: () => {
+			for (var y = 0; y < level.length; y++) {
+				for (var x = 0; x < level[y].length; x++) {
+					if (level[y][x] === MAP_SYMBOL_START) {
+						return vec(x, y);
+					}
+				}
+			}
+		},
 
 		setTower: (cell) => setCellContent(cell, MAP_SYMBOL_TOWER),
 
 		isCellFree: cell => getCellContent(cell) === MAP_SYMBOL_FREE,
 		isCellTower: cell => getCellContent(cell) === MAP_SYMBOL_TOWER,
 		isCellPath: isCellPath,
+		isMouseOver: isMouseOver,
 
 		render: context => {
 			level.forEach(function(row, y) {

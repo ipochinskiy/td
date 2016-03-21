@@ -40,12 +40,22 @@ var Enemy = (function() {
 		}, vadd(enemyCenter, vec(0, -15)));
 	}
 
+	const findStartPosition = () => {
+		var startCell = Map.getStartCell();
+		if (veq(startCell, vec(0, 0))) { return vec(-1, 0); }
+
+		var x = startCell.x === 0 ? -1 : startCell.x;
+		var y = startCell.y === 0 ? -1 : startCell.y;
+
+		return vec(x, y);
+	};
+
 	return {
 		getDefaultEnemy: () => ({
 			hp: 10,
 			speed: 0.6,
-			currentPosition: vec(-1, 1),
-			previousPosition: vec(-1, 1),
+			currentPosition: findStartPosition(),
+			previousPosition: findStartPosition(),
 			bullets: []
 		}),
 		isEnemyAlive: isEnemyAlive,
