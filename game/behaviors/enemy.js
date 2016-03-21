@@ -33,7 +33,7 @@ function runWaves(behaviorSystem) {
 
 			for (var j = 0; j < wave.enemiesCount; j++) {
 				if (j > 0) {
-					yield Behavior.wait(1);
+					yield Behavior.wait(ENEMY_SPAWN_DELAY);
 				}
 
 				behaviorSystem.add(spawnEnemy());
