@@ -1,10 +1,4 @@
-var Map = (function() {	
-	const MAP_SYMBOL_START = 'X';
-	const MAP_SYMBOL_PATH = 'x';
-	const MAP_SYMBOL_END = '0';
-	const MAP_SYMBOL_TOWER = 'T';
-	const MAP_SYMBOL_FREE = ' ';
-
+var Map = (function() {
 	var map = {
 		pos: vec(0, 0), size: vec(0, 0), cellSize: vec(0, 0)
 	};

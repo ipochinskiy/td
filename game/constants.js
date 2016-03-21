@@ -50,3 +50,9 @@ const TOWER_SPAWN_BULLETS_DELAY = 0.2;
 
 const ENEMY_SPAWN_DELAY = 0.6;
 
+const MAP_SYMBOL_START = 'X';
+const MAP_SYMBOL_PATH = 'x';
+const MAP_SYMBOL_END = '0';
+const MAP_SYMBOL_TOWER = 'T';
+const MAP_SYMBOL_FREE = ' ';
+
