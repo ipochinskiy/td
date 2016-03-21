@@ -9,7 +9,8 @@ var Blueprint = (function(type) {
 		if (blueprint.modus === 'tower') {
 			return Map.isCellFree(blueprint.cell);
 		} else if (blueprint.modus === 'booster') {
-			return Map.isCellTower(blueprint.cell);
+			var tower = Tower.getTowerInCell(blueprint.cell);
+			return tower && Tower.isFreeForBooster(tower);
 		}
 	}
 

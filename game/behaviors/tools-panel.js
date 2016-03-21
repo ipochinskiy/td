@@ -16,7 +16,10 @@ function waitForItemSelected() {
 	});
 }
 
-const shouldShowBlueprint = pos => !Tower.getTowerInCell(Map.getCellByCoords(pos));
+const shouldShowBlueprint = pos => {
+	var tower = Tower.getTowerInCell(Map.getCellByCoords(pos));
+	return !(tower && Tower.isFreeForBooster(tower));
+}
 
 function makeBlueprintFollowMouse() {
 	return Behavior.run(function*() {

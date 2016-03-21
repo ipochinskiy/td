@@ -73,6 +73,7 @@ var Tower = (function() {
 
 		isTargetAvailable: (tower, target) =>
 			isPointInCircle(target, tower.pos, tower.range) && Enemy.isEnemyAlive(target),
+		isFreeForBooster: tower => tower.slots.length < tower.maxSlotsAmount,
 
 		renderTowers: function(context) {
 			var cellSize = Map.getCellSize();
