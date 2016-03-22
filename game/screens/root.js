@@ -36,6 +36,8 @@ var RootScreen = function() {
 				Enemy.renderEnemies(context);
 
 				Blueprint.render(context);
+
+				Money.render(context);
 			}
 		}),
 		function (event) {
