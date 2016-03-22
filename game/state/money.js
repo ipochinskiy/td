@@ -7,18 +7,13 @@ var Money = (function() {
 		getRest: () => money,
 
 		render: function(context) {
-			var canvasSize = vec(context.canvas.width, context.canvas.height);
-
-			var text = '$ ' + money;
-			var textWidth = StringRenderer.getWidth(context, text, 22, 'Arial');
-
-			StringRenderer.render(context, text, {
+			StringRenderer.render(context, '$ ' + money, {
 				fill: 'red',
 				height: 22,
 				font: 'Arial',
-				halign: 'left',
+				halign: 'right',
 				valign: 'bottom'
-			}, vec(canvasSize.x - textWidth - 20, 50));
+			}, vec(context.canvas.width - 20, 40));
 		}
 	};
 })();

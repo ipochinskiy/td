@@ -52,8 +52,8 @@ var Enemy = (function() {
 
 	return {
 		getDefaultEnemy: () => ({
-			hp: 10,
-			speed: 0.6,
+			hp: ENEMY_HEALTH,
+			speed: ENEMY_SPEED,
 			currentPosition: findStartPosition(),
 			previousPosition: findStartPosition(),
 			bullets: []

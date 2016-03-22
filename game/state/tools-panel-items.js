@@ -20,7 +20,9 @@ var PanelItems = (function() {
 			valign: 'bottom'
 		};
 
-		StringRenderer.render(context, text, style, vadd(rect.pos, rect.size));
+		var pos = vsub(vadd(rect.pos, rect.size), vec(5, 2));
+
+		StringRenderer.render(context, text, style, pos);
 	}
 
 	const renderItem = (context, name, rect) => {

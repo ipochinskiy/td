@@ -11,7 +11,7 @@ function waitForTarget(tower) {
 function moveToTargetAndMakeDamage(tower, target, bullet) {
 	var startPosition = vclone(tower.pos);
 	return Behavior.run(function*() {
-		yield Behavior.interval(TOWER_SPAWN_BULLETS_DELAY, function(progress) {
+		yield Behavior.interval(BULLET_SPEED, function(progress) {
 			bullet.pos = vlerp(startPosition, target.currentPosition, progress);
 		});
 

@@ -60,9 +60,9 @@ var Tower = (function() {
 	return {
 		getDefaultTower: cell => ({
 			pos: vclone(cell),
-			power: 5,
-			range: 1.5,
-			cooldown: 1.5,
+			power: TOWER_POWER,
+			range: TOWER_RANGE,
+			cooldown: TOWER_COOLDOWN,
 			maxSlotsAmount: TOWER_MAX_SLOT_COUNT,
 			slots: []
 		}),
