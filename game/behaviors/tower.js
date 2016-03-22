@@ -16,6 +16,9 @@ function moveToTargetAndMakeDamage(tower, target, bullet) {
 		});
 
 		target.hp -= tower.power;
+		if (target.hp <= 0) {
+			Money.add(MONEY_ENEMY_REWARD);
+		}
 
 		var index = target.bullets.indexOf(bullet);
 		target.bullets.splice(index, 1);
@@ -35,6 +38,7 @@ function buildTower(behaviorSystem, cell) {
 	towers.push(tower);
 	Map.setTower(cell);
 	Tower.setHovered(tower);
+	Money.sub(MONEY_TOWER_COST);
 
 	return Behavior.run(function*() {
 		while (true) {
