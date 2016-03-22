@@ -9,6 +9,9 @@ var PanelItems = (function() {
 
 	const isClickable = name => Money.getRest() >= items[name].price;
 
+	const isItemAvailable = name => isClickable(name) &&
+		(items[name].type !== 'tower' || Tower.isAbleToBuild());
+
 	const renderPrice = (context, name, rect) => {
 		var text = '$' + items[name].price;
 
@@ -40,14 +43,14 @@ var PanelItems = (function() {
 
 	return {
 		getItemDescription: name => items[name] && items[name] || {},
-		isItemClickable: isClickable,
+		isItemAvailable: isItemAvailable,
 		render: (context, name, rect) => {
 			if (!items[name]) { return; }
 
 			renderItem(context, name, rect);
 			renderPrice(context, name, rect);
 
-			if (!isClickable(name)) {
+			if (!isItemAvailable(name)) {
 				renderOverlay(context, rect);
 			}
 		},

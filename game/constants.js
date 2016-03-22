@@ -44,6 +44,7 @@ const STYLE_BULLET = {
 	lineWidth: 1
 };
 
+const TOWER_MAX_AMOUNT = 2;
 const TOWER_MAX_SLOT_COUNT = 4;
 const TOWER_RANGE = 1.5;
 const TOWER_POWER = 5;

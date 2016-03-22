@@ -5,7 +5,7 @@ function waitForItemSelected() {
 			var event = yield Behavior.type('mousedown');
 			var clickedItem = ToolsPanel.getHoveredItem(event.pos);
 
-			if (PanelItems.isItemClickable(clickedItem)) {
+			if (PanelItems.isItemAvailable(clickedItem)) {
 				selectedItem = clickedItem;
 			}
 		}
