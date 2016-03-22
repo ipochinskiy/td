@@ -7,6 +7,8 @@ var PanelItems = (function() {
 		cooldownBooster: { type: 'booster', boost: 'cooldown', price: MONEY_BOOSTER_COOLDOWN_COST },
 	};
 
+	const isClickable = name => Money.getRest() >= items[name].price;
+
 	const renderPrice = (context, name, rect) => {
 		var text = '$' + items[name].price;
 
@@ -27,13 +29,24 @@ var PanelItems = (function() {
 		PrimitiveRenderer.circle(context, PANEL_ITEMS_STYLE_MAP[name], center, radius);
 	}
 
+	const renderOverlay = (context, rect) => {
+		var oldAlpha = context.globalAlpha;
+		context.globalAlpha = 0.4;
+		PrimitiveRenderer.rect(context, { fill: 'black' }, rect.pos, rect.size);
+		context.globalAlpha = oldAlpha;
+	}
+
 	return {
 		getItemDescription: name => items[name] && items[name] || {},
+		isItemClickable: isClickable,
 		render: (context, name, rect) => {
 			if (!items[name]) { return; }
 
 			renderItem(context, name, rect);
 			renderPrice(context, name, rect);
+
+			if (!isClickable(name)) {
+				renderOverlay(context, rect);
 			}
 		},
 	};

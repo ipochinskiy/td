@@ -1,18 +1,22 @@
 function waitForItemSelected() {
 	return Behavior.run(function*() {
-		var name;
-		while (!name) {
+		var selectedItem;
+		while (!selectedItem) {
 			var event = yield Behavior.type('mousedown');
-			name = ToolsPanel.getHoveredItem(event.pos);
+			var clickedItem = ToolsPanel.getHoveredItem(event.pos);
+
+			if (PanelItems.isItemClickable(clickedItem)) {
+				selectedItem = clickedItem;
+			}
 		}
 
-		if (PanelItems.getItemDescription(name).type === 'tower') {
+		if (PanelItems.getItemDescription(selectedItem).type === 'tower') {
 			Blueprint.enableModusTower();
 		} else {
 			Blueprint.enableModusBooster();
 		}
 
-		return name;
+		return selectedItem;
 	});
 }
 
