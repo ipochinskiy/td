@@ -1,5 +1,6 @@
 var waves = [
 	{ enemiesCount: 2, delay: 1 },
+	{ enemiesCount: 2, delay: 3 },
 	{ enemiesCount: 5, delay: 5 },
 	{ enemiesCount: 10, delay: 8 },
 	{ enemiesCount: 20, delay: 15 },

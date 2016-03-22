@@ -64,11 +64,11 @@ function waitForItemCancelled(name) {
 function applyBoosterOnTower(tower, boostEffect) {
 	switch (boostEffect) {
 		case 'power': {
-			tower.power *= 2;
+			tower.power *= 1.5;
 			break;
 		}
 		case 'cooldown': {
-			tower.cooldown /= 2;
+			tower.cooldown /= 1.5;
 			break;
 		}
 	}
