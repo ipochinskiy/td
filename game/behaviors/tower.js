@@ -38,7 +38,6 @@ function buildTower(behaviorSystem, cell) {
 	towers.push(tower);
 	Map.setTower(cell);
 	Tower.setHovered(tower);
-	Money.sub(MONEY_TOWER_COST);
 
 	return Behavior.run(function*() {
 		while (true) {

@@ -93,6 +93,7 @@ function waitForItemApplied(behaviorSystem, name) {
 					applyBoosterOnTower(tower, itemDescription.boost);
 					tower.slots.push(name);
 				}
+				Money.sub(itemDescription.price);
 				return Blueprint.disable();
 			}
 		}
