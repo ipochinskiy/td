@@ -71,7 +71,7 @@ var Tower = (function() {
 		setHovered: tower => hoveredTower = tower,
 		unsetHovered: () => hoveredTower = undefined,
 
-		isAbleToBuild: () => towers.length < TOWER_MAX_AMOUNT,
+		// isAbleToBuild: () => towers.length < TOWER_MAX_AMOUNT,
 		isTargetAvailable: (tower, target) =>
 			isPointInCircle(target, tower.pos, tower.range) && Enemy.isEnemyAlive(target),
 		isFreeForBooster: tower => tower.slots.length < tower.maxSlotsAmount,

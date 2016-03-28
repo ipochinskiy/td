@@ -86,14 +86,16 @@ function waitForItemApplied(behaviorSystem, name) {
 				if (itemDescription.type === 'tower') {
 					var towerBehavior = buildTower(behaviorSystem, cell);
 					behaviorSystem.add(towerBehavior);
+					Money.sub(itemDescription.price);
+					itemDescription.price *= 5;
 				} else {
 					var tower = Tower.getTowerInCell(cell);
 					if (!tower) { return; }
 
 					applyBoosterOnTower(tower, itemDescription.boost);
 					tower.slots.push(name);
+					Money.sub(itemDescription.price);
 				}
-				Money.sub(itemDescription.price);
 				return Blueprint.disable();
 			}
 		}

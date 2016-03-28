@@ -45,7 +45,7 @@ var RootScreen = function() {
 			return { done: false };
 		},
 		Behavior.run(function*() {
-			behaviorSystem.add(runWaves(behaviorSystem));
+			behaviorSystem.add(runWavesNonStop(behaviorSystem));
 
 			while(true) {
 				yield Behavior.first(

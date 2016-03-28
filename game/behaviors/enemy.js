@@ -41,3 +41,24 @@ function runWaves(behaviorSystem) {
 		};
 	});
 }
+
+function runWavesNonStop(behaviorSystem) {
+	var enemiesCount = 2;
+	var waveDelay = 2;
+	return Behavior.run(function*() {
+		while (true) {
+			yield Behavior.wait(waveDelay);
+
+			for (var j = 0; j < enemiesCount; j++) {
+				if (j > 0) {
+					yield Behavior.wait(ENEMY_SPAWN_DELAY);
+				}
+
+				behaviorSystem.add(spawnEnemy());
+			}
+
+			enemiesCount = Math.floor(enemiesCount * 1.6);
+			waveDelay = waveDelay * 1.3;
+		};
+	});
+}
